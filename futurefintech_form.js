@@ -1,4 +1,5 @@
 // const SURVEY_ID = 1;
+const API_BASE = "http://127.0.0.1:8000/api/applications";
 
 const surveyJson = {
     "title": "2026 FutureFintech Fellows Survey Form",
@@ -84,7 +85,7 @@ const surveyJson = {
             "elements": [
                 {
                     "type": "paneldynamic",
-                    "name": "events_list",
+                    "name": "events",
                     "title": "FinTech-related Events",
                     "panelAddText": "Add Event",
                     "panelRemoveText": "Remove",
@@ -138,7 +139,7 @@ const surveyJson = {
             "elements": [
                 {
                     "type": "paneldynamic",
-                    "name": "grants_list",
+                    "name": "grants",
                     "panelAddText": "Add Project",
                     "templateElements": [
                         { "type": "text", "name": "project_name", "title": "Project Name" },
@@ -164,7 +165,7 @@ const surveyJson = {
             "elements": [
                 {
                     "type": "paneldynamic",
-                    "name": "publications_list",
+                    "name": "publications",
                     "panelAddText": "Add Publication",
                     "templateElements": [
                         { "type": "text", "name": "publication_date", "title": "Publication Date", "inputType": "date" },
@@ -221,37 +222,168 @@ const surveyJson = {
 
 const survey = new Survey.Model(surveyJson);
 
-// function saveSurveyResults(url, json) {
-//     fetch(url, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json;charset=UTF-8'
-//         },
-//         body: JSON.stringify(json)
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             // Handle success
-//         } else {
-//             // Handle error
-//         }
-//     })
-//     .catch(error => {
-//         // Handle error
-//     });
-// }
+// ----------------------------------
+// Helpers
+// ----------------------------------
 
-function alertResults(sender) {
-    const results = JSON.stringify(sender.data);
-    alert(results);
-    // saveSurveyResults(
-    //     "https://web-service.com/" + SURVEY_ID,
-    //     sender.data
-    // )
+function getApplicationIdFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("app");
 }
 
-survey.onComplete.add(alertResults);
+// Fields to move under "applicant"
+const applicantFields = ["email", "name", "surname", "applicant_type", "discipline", "events_na", "grants_na", "publications_na"];
 
-document.addEventListener("DOMContentLoaded", function () {
+/**
+ * Converts flat form data into nested form with "applicant"
+ * @param {Object} data - flat form data
+ * @returns {Object} - nested form data
+ */
+function nestApplicant(data) {
+    const nested = { ...data }; // copy original
+    nested.applicant = {};
+    
+    applicantFields.forEach(field => {
+        if (field in nested) {
+            nested.applicant[field] = nested[field];
+            delete nested[field]; // remove from top-level
+        }
+    });
+
+    return nested;
+}
+
+/**
+ * Flattens nested form data, moving "applicant" fields back to top-level
+ * @param {Object} data - nested form data
+ * @returns {Object} - flat form data
+ */
+function flattenApplicant(data) {
+    if (!data.applicant) return { ...data }; // nothing to flatten
+
+    const flat = { ...data };
+    applicantFields.forEach(field => {
+        if (field in flat.applicant) {
+            flat[field] = flat.applicant[field];
+        }
+    });
+
+    delete flat.applicant; // remove the nested object
+    return flat;
+}
+
+async function apiRequest(url, method, data = null) {
+    const options = {
+        method,
+        headers: { "Content-Type": "application/json" }
+    };
+
+    if (data) {
+        options.body = JSON.stringify(data);
+    }
+
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw { status: response.status, data: errorData };
+    }
+
+    return response.json();
+}
+
+// ----------------------------------
+// Load existing application (EDIT)
+// ----------------------------------
+
+async function loadApplication(applicationId) {
+    try {
+        const data = await apiRequest(`${API_BASE}/${applicationId}`, "GET");
+        survey.data = flattenApplicant(data);
+    } catch (err) {
+        console.error("Failed to load application", err);
+        alert("Unable to load application. The link may be invalid.");
+    }
+}
+
+// ----------------------------------
+// Save (CREATE or UPDATE)
+// ----------------------------------
+
+async function saveApplication(sender) {
+    const applicationId = getApplicationIdFromUrl();
+    const isUpdate = Boolean(applicationId);
+
+    try {
+        const result = await apiRequest(
+            isUpdate ? `${API_BASE}/${applicationId}` : API_BASE,
+            isUpdate ? "PUT" : "POST",
+            nestApplicant(sender.data)
+        );
+
+        if (!isUpdate) {
+            // Redirect to edit URL returned by backend
+            window.location.href = `${result.edit_url}`;
+        } else {
+            alert("Application updated successfully.");
+        }
+
+    } catch (err) {
+        handleValidationErrors(err, sender);
+    }
+}
+
+// ----------------------------------
+// Map FastAPI validation errors → SurveyJS
+// ----------------------------------
+
+function handleValidationErrors(err, survey) {
+    if (err.status !== 422 || !err.data?.detail) {
+        alert("An unexpected error occurred while saving.");
+        console.error(err);
+        return;
+    }
+
+    // Clear previous errors
+    survey.getAllQuestions().forEach(q => q.clearErrors());
+
+    err.data.detail.forEach(error => {
+        // Example FastAPI error path:
+        // ["body", "applicant", "email"]
+        const path = error.loc.slice(1).join(".");
+        const question = survey.getQuestionByName(path);
+
+        if (question) {
+            question.addError(error.msg);
+        }
+    });
+
+    survey.focusFirstError();
+}
+
+// ----------------------------------
+// SurveyJS Hooks
+// ----------------------------------
+
+survey.onComplete.add(sender => {
+    saveApplication(sender);
+});
+
+// Optional: auto-save draft
+// survey.onValueChanged.add(Survey.FunctionFactory.Instance.create("autoSave", () => {
+//   saveApplication(survey);
+// }));
+
+// ----------------------------------
+// Init
+// ----------------------------------
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const applicationId = getApplicationIdFromUrl();
+
+    if (applicationId) {
+        await loadApplication(applicationId);
+    }
+
     survey.render(document.getElementById("surveyContainer"));
 });
