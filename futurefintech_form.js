@@ -90,7 +90,7 @@ const surveyJson = {
                     "panelAddText": "Add Event",
                     "panelRemoveText": "Remove",
                     "templateElements": [
-                        { "type": "text", "name": "date", "title": "Date", "inputType": "date" },
+                        { "type": "text", "name": "event_date", "title": "Date", "inputType": "date" },
                         { "type": "text", "name": "event_name", "title": "Event Name" },
                         {
                             "type": "dropdown",
@@ -303,6 +303,8 @@ async function loadApplication(applicationId) {
     } catch (err) {
         console.error("Failed to load application", err);
         alert("Unable to load application. The link may be invalid.");
+        // Reload the page but remove any query parameters
+        window.location.href = window.location.origin + window.location.pathname;
     }
 }
 
