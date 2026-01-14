@@ -568,6 +568,10 @@ function renderTopNav() {
 
     document.getElementById("resumeBtn").onclick = async () => {
         const id = document.getElementById("applicationIdInput").value.trim();
+        if (!id) {
+            survey.notify("Provide an application ID.", "error");
+            return;
+        }
         try {
             await loadApplication(id, reload=false);
             setApplicationIdInUrl(id);
