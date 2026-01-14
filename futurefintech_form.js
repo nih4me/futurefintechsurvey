@@ -501,7 +501,7 @@ function setApplicationIdInUrl(applicationId) {
 }
 
 // Fields to move under "applicant"
-const applicantFields = ["email", "name", "surname", "applicant_type", "discipline", "awards_na", "phd_students_na", "press_na", "partnerships_na", "events_na", "grants_na", "publications_na"];
+const applicantFields = ["email", "name", "surname", "applicant_type", "affiliated_fellow_email", "discipline", "awards_na", "phd_students_na", "press_na", "partnerships_na", "events_na", "grants_na", "publications_na"];
 
 /**
  * Converts flat form data into nested form with "applicant"
