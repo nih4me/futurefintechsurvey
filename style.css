@@ -1,0 +1,55 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+#topNav {
+    padding: 10px;
+    background-color: #18B394;
+    text-align: right;
+}
+
+#topNav .small {
+    font-size: small !important;
+    height: 30px !important;
+    line-height: 0px !important;
+}
+
+#topNav #applicationIdInput {
+    text-indent: 10px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px #f5f5f5 solid; 
+}
+
+#topNav #applicationIdInput:focus {
+    border: 1px #18B394 solid; 
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 6px;
+    width: 400px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.error {
+    color: red;
+    margin-top: 0.5rem;
+}
