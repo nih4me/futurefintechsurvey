@@ -569,7 +569,7 @@ function renderTopNav() {
     document.getElementById("resumeBtn").onclick = async () => {
         const id = document.getElementById("applicationIdInput").value.trim();
         try {
-            await loadApplication(id);
+            await loadApplication(id, reload=false);
             setApplicationIdInUrl(id);
         } catch {
             survey.notify("Invalid application ID.", "error");
@@ -581,15 +581,18 @@ function renderTopNav() {
 // Load existing application (EDIT)
 // ----------------------------------
 
-async function loadApplication(applicationId) {
+async function loadApplication(applicationId, reload=true) {
     try {
         const data = await apiRequest(`${API_BASE}/${applicationId}`, "GET");
         survey.data = flattenApplicant(data);
+        document.getElementById("applicationIdInput").value = applicationId;
     } catch (err) {
         console.error("Failed to load application", err);
-        survey.notify("Unable to load application. The link may be invalid.", "error");
-        // Reload the page but remove any query parameters
-        window.location.href = window.location.origin + window.location.pathname;
+        survey.notify("Unable to load application #" + applicationId, "error");
+        if (reload) {
+            // Reload the page but remove any query parameters
+            window.location.href = window.location.origin + window.location.pathname;
+        }
     }
 }
 
@@ -620,6 +623,7 @@ async function saveDraft(survey) {
         }
 
         survey.notify("Draft saved successfully", "success");
+        document.getElementById("applicationIdInput").value = applicationId;
 
     } catch (err) {
         survey.notify("Unable to save draft. Ensure the all personal information of applicant are filled.", "error");
@@ -642,6 +646,7 @@ async function saveApplication(sender) {
             // Redirect to edit URL returned by backend
             window.location.href = `${result.edit_url}`;
         } else {
+            document.getElementById("applicationIdInput").value = applicationId;
             survey.notify("Application updated successfully.", "success");
         }
 
