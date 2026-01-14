@@ -10,7 +10,6 @@ class Application(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, onupdate=func.now())
 
-
 class ApplicantInfo(Base):
     __tablename__ = "applicant_info"
 
@@ -28,6 +27,11 @@ class ApplicantInfo(Base):
     events_na = Column(Boolean)
     grants_na = Column(Boolean)
     publications_na = Column(Boolean)
+    awards_na = Column(Boolean)
+    partnerships_na = Column(Boolean)
+    phd_students_na = Column(Boolean)
+    press_na = Column(Boolean)
+    
 
 class Narrative(Base):
     __tablename__ = "narratives"

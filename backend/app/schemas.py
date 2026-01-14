@@ -16,66 +16,70 @@ class ApplicantInfoSchema(BaseModel):
     events_na: Optional[bool] = False
     grants_na: Optional[bool] = False
     publications_na: Optional[bool] = False
+    awards_na: Optional[bool] = False
+    partnerships_na: Optional[bool] = False
+    phd_students_na: Optional[bool] = False
+    press_na: Optional[bool] = False
 
 # ----------------------------
 # Dynamic Panels
 # ----------------------------
 
 class EventSchema(BaseModel):
-    event_date: Optional[date]
-    event_name: Optional[str]
-    event_type: Optional[str]
-    location: Optional[str]
-    role: Optional[str]
+    event_date: Optional[date] = None
+    event_name: Optional[str] = None
+    event_type: Optional[str] = None
+    location: Optional[str] = None
+    role: Optional[str] = None
 
 
 class GrantProjectSchema(BaseModel):
-    project_name: Optional[str]
-    start_date: Optional[date]
-    end_date: Optional[date]
-    funder: Optional[str]
-    funding_programme: Optional[str]
+    project_name: Optional[str] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+    funder: Optional[str] = None
+    funding_programme: Optional[str] = None
     mixed_gender: Optional[bool] = False
     mixed_team: Optional[bool] = False
 
 
 class PartnershipProjectSchema(BaseModel):
-    project_name: Optional[str]
-    start_date: Optional[date]
-    partnership_type: Optional[str]
-    partner: Optional[str]
-    acquired_funding: Optional[float]
+    project_name: Optional[str] = None
+    start_date: Optional[date] = None
+    partnership_type: Optional[str] = None
+    partner: Optional[str] = None
+    acquired_funding: Optional[float] = None
 
 
 class PublicationSchema(BaseModel):
-    publication_date: Optional[date]
-    publication_name: Optional[str]
-    orbilu_link: Optional[str]
+    publication_date: Optional[date] = None
+    publication_name: Optional[str] = None
+    orbilu_link: Optional[str] = None
     mixed_gender: Optional[bool] = False
     mixed_team: Optional[bool] = False
 
 
 class PhDStudentSchema(BaseModel):
-    graduation_date: Optional[date]
-    student_name: Optional[str]
-    thesis_title: Optional[str]
-    career_pursued: Optional[str]
-    current_work_location: Optional[str]
+    graduation_date: Optional[date] = None
+    student_name: Optional[str] = None
+    thesis_title: Optional[str] = None
+    career_pursued: Optional[str] = None
+    current_work_location: Optional[str] = None
 
 
 class AwardSchema(BaseModel):
-    award_date: Optional[date]
-    award_title: Optional[str]
-    award_subject: Optional[str]
-    award_issuer: Optional[str]
+    award_date: Optional[date] = None
+    award_title: Optional[str] = None
+    award_subject: Optional[str] = None
+    award_issuer: Optional[str] = None
 
 
 class PressAppearanceSchema(BaseModel):
-    appearance_date: Optional[date]
-    press_name: Optional[str]
-    press_type: Optional[str]
-    appearance_type: Optional[str]
-    subject: Optional[str]
+    appearance_date: Optional[date] = None
+    press_name: Optional[str] = None
+    press_type: Optional[str] = None
+    appearance_type: Optional[str] = None
+    subject: Optional[str] = None
 
 
 # ----------------------------
@@ -102,9 +106,9 @@ class ApplicationSurveySchema(BaseModel):
     planned_contributions: str = Field(..., max_length=150)
 
     # Feedback
-    form_intuitive: Optional[int]
-    form_easy: Optional[int]
-    suggestions: Optional[str]
+    form_intuitive: Optional[int] = None
+    form_easy: Optional[int] = None
+    suggestions: Optional[str] = None
 
     class Config:
         from_attributes = True

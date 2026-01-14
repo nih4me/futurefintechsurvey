@@ -23,16 +23,40 @@ def get_db():
         db.close()
 
 
+def populate(db, application_id, payload):
+    for ev in payload.events:
+        db.add(Event(application_id=application_id, **ev.dict()))
+
+    for g in payload.grants:
+        db.add(GrantProject(application_id=application_id, **g.dict()))
+
+    for p in payload.partnerships:
+        db.add(PartnershipProject(application_id=application_id, **p.dict()))
+
+    for pub in payload.publications:
+        db.add(Publication(application_id=application_id, **pub.dict()))
+
+    for phd in payload.phd_students:
+        db.add(PhDStudent(application_id=application_id, **phd.dict()))
+
+    for a in payload.awards:
+        db.add(Award(application_id=application_id, **a.dict()))
+
+    for pr in payload.press:
+        db.add(PressAppearance(application_id=application_id, **pr.dict()))
+
+    return db
+
 # ----------------------------
 # CREATE
 # ----------------------------
 
 @router.post("/", status_code=201)
-def create_application(payload: ApplicationSurveySchema, db: Session = Depends(get_db)):
+def create_application(payload: ApplicationSurveySchema, status: str = "submitted", db: Session = Depends(get_db)):
     application_id = generate_application_id()
 
     try:
-        db.add(Application(application_id=application_id))
+        db.add(Application(application_id=application_id, status=status))
 
         db.add(ApplicantInfo(application_id=application_id, **payload.applicant.dict()))
         db.add(Narrative(application_id=application_id, narrative=payload.narrative))
@@ -49,26 +73,7 @@ def create_application(payload: ApplicationSurveySchema, db: Session = Depends(g
                 suggestions=payload.suggestions
             ))
 
-        for ev in payload.events:
-            db.add(Event(application_id=application_id, **ev.dict()))
-
-        for g in payload.grants:
-            db.add(GrantProject(application_id=application_id, **g.dict()))
-
-        for p in payload.partnerships:
-            db.add(PartnershipProject(application_id=application_id, **p.dict()))
-
-        for pub in payload.publications:
-            db.add(Publication(application_id=application_id, **pub.dict()))
-
-        for phd in payload.phd_students:
-            db.add(PhDStudent(application_id=application_id, **phd.dict()))
-
-        for a in payload.awards:
-            db.add(Award(application_id=application_id, **a.dict()))
-
-        for pr in payload.press:
-            db.add(PressAppearance(application_id=application_id, **pr.dict()))
+        db = populate(db, application_id, payload)
 
         db.commit()
 
@@ -149,26 +154,7 @@ def update_application(
         ]:
             db.query(table).filter_by(application_id=application_id).delete()
 
-        for ev in payload.events:
-            db.add(Event(application_id=application_id, **ev.dict()))
-
-        for g in payload.grants:
-            db.add(GrantProject(application_id=application_id, **g.dict()))
-
-        for p in payload.partnerships:
-            db.add(PartnershipProject(application_id=application_id, **p.dict()))
-
-        for pub in payload.publications:
-            db.add(Publication(application_id=application_id, **pub.dict()))
-
-        for phd in payload.phd_students:
-            db.add(PhDStudent(application_id=application_id, **phd.dict()))
-
-        for a in payload.awards:
-            db.add(Award(application_id=application_id, **a.dict()))
-
-        for pr in payload.press:
-            db.add(PressAppearance(application_id=application_id, **pr.dict()))
+        db = populate(db, application_id, payload)
 
         db.commit()
 
