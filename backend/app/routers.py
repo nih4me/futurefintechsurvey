@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import SessionLocal
+from database import get_db
 from schemas import ApplicationSurveySchema
 from models import (
     Application, ApplicantInfo, Narrative, PlannedContribution, Feedback,
@@ -10,18 +10,6 @@ from models import (
 from utils import generate_application_id
 
 router = APIRouter(prefix="/api/applications", tags=["applications"])
-
-# ----------------------------
-# DB Dependency
-# ----------------------------
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 
 def populate(db, application_id, payload):
     for ev in payload.events:

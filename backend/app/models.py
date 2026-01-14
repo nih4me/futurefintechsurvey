@@ -96,7 +96,7 @@ class Publication(Base):
         ForeignKey("applications.application_id", ondelete="CASCADE")
     )
     publication_date = Column(Date)
-    publication_name = Column(String(255))
+    publication_name = Column(String(255)) # TODO: Must be replaced with publication title
     orbilu_link = Column(String(500))
     mixed_gender = Column(Boolean)
     mixed_team = Column(Boolean)
