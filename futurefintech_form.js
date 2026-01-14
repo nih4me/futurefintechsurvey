@@ -5,9 +5,12 @@ const surveyJson = {
     "title": "2026 FutureFintech Fellows Survey Form",
     "showQuestionNumbers": "on",
     "pages": [
+        /* =========================
+        A. Applicant information
+        ========================= */
         {
             "name": "applicant_information",
-            "title": "1. Applicant Information",
+            "title": "A. Applicant Information",
             "elements": [
                 {
                     "type": "text",
@@ -66,9 +69,13 @@ const surveyJson = {
                 }
             ]
         },
+
+        /* =========================
+        B. Short Narrative
+        ========================= */
         {
             "name": "short_narrative",
-            "title": "2. Short Narrative",
+            "title": "B. Short Narrative",
             "elements": [
                 {
                     "type": "comment",
@@ -79,13 +86,24 @@ const surveyJson = {
                 }
             ]
         },
+
+        /* =========================
+        C. Events
+        ========================= */
         {
             "name": "events",
-            "title": "3. Contributions to FutureFinTech – Events",
+            "title": "C. Contributions to FutureFinTech – Events",
             "elements": [
+                {
+                    "type": "boolean",
+                    "name": "events_na",
+                    "title": "Not Applicable"
+                },
                 {
                     "type": "paneldynamic",
                     "name": "events",
+                    "title": "Events",
+                    "visibleIf": "{events_na} = false",
                     "title": "FinTech-related Events",
                     "panelAddText": "Add Event",
                     "panelRemoveText": "Remove",
@@ -126,20 +144,26 @@ const surveyJson = {
                         }
                     ]
                 },
-                {
-                    "type": "boolean",
-                    "name": "events_na",
-                    "title": "Not Applicable"
-                }
             ]
         },
+
+        /* =========================
+        D. Grants
+        ========================= */
         {
             "name": "grants_projects",
-            "title": "3. Contributions to FutureFinTech – Grants and Projects",
+            "title": "D. Contributions to FutureFinTech – Grants and Projects",
             "elements": [
+                {
+                    "type": "boolean",
+                    "name": "grants_na",
+                    "title": "Not applicable"
+                },
                 {
                     "type": "paneldynamic",
                     "name": "grants",
+                    "title": "Grants",
+                    "visibleIf": "{grants_na} = false",
                     "panelAddText": "Add Project",
                     "templateElements": [
                         { "type": "text", "name": "project_name", "title": "Project Name" },
@@ -156,16 +180,84 @@ const surveyJson = {
                         { "type": "boolean", "name": "mixed_team", "title": "Mixed FDEF-SnT Team Composition" }
                     ]
                 },
-                { "type": "boolean", "name": "grants_na", "title": "Not Applicable" }
             ]
         },
+
+        /* =========================
+        E. Partnerships and Collaborations
+        ========================= */
+        {
+            "type": "panel",
+            "name": "partnerships",
+            "title": "E. Partnerships and Collaborative Projects",
+            "elements": [
+                {
+                    "type": "boolean",
+                    "name": "partnerships_na",
+                    "title": "Not applicable"
+                },
+                {
+                    "type": "paneldynamic",
+                    "name": "partnerships",
+                    "title": "Partnerships",
+                    "visibleIf": "{partnerships_na} = false",
+                    "panelAddText": "Add a partnership",
+                    "panelRemoveText": "Remove",
+                    "valueName": "partnerships",
+                    "templateElements": [
+                        {
+                            "type": "text",
+                            "name": "project_name",
+                            "title": "Project name"
+                        },
+                        {
+                            "type": "datepicker",
+                            "name": "start_date",
+                            "title": "Start date",
+                            "dateFormat": "yyyy-mm-dd"
+                        },
+                        {
+                            "type": "dropdown",
+                            "name": "partnership_type",
+                            "title": "Partnership type",
+                            "choices": [
+                                "Industrial",
+                                "Governmental"
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "name": "partner",
+                            "title": "Partner organization"
+                        },
+                        {
+                            "type": "text",
+                            "name": "acquired_funding",
+                            "title": "Acquired funding (€)",
+                            "inputType": "number"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        /* =========================
+        F. Publications
+        ========================= */
         {
             "name": "publications",
-            "title": "3. Contributions to FutureFinTech – Publications",
+            "title": "F. Contributions to FutureFinTech – Publications",
             "elements": [
+                {
+                    "type": "boolean",
+                    "name": "publications_na",
+                    "title": "Not Applicable"
+                },
                 {
                     "type": "paneldynamic",
                     "name": "publications",
+                    "title": "Publications",
+                    "visibleIf": "{publications_na} = false",
                     "panelAddText": "Add Publication",
                     "templateElements": [
                         { "type": "text", "name": "publication_date", "title": "Publication Date", "inputType": "date" },
@@ -174,13 +266,178 @@ const surveyJson = {
                         { "type": "boolean", "name": "mixed_gender", "title": "Mixed-gender Team Composition" },
                         { "type": "boolean", "name": "mixed_team", "title": "Mixed FDEF-SnT Team Composition" }
                     ]
-                },
-                { "type": "boolean", "name": "publications_na", "title": "Not Applicable" }
+                }
             ]
         },
+
+        /* =========================
+        G. PhD Students Supervised
+        ========================= */
+        {
+            "type": "panel",
+            "name": "phd_students",
+            "title": "G. Contributions to FutureFinTech – PhD Students Supervised",
+            "elements": [
+                {
+                    "type": "boolean",
+                    "name": "phd_students_na",
+                    "title": "Not applicable"
+                },
+                {
+                    "type": "paneldynamic",
+                    "name": "phd_students",
+                    "title": "PhD Students",
+                    "visibleIf": "{phd_students_na} = false",
+                    "panelAddText": "Add a PhD student",
+                    "panelRemoveText": "Remove",
+                    "valueName": "phd_students",
+                    "templateElements": [
+                        {
+                            "type": "datepicker",
+                            "name": "graduation_date",
+                            "title": "Graduation date",
+                            "dateFormat": "yyyy-mm-dd"
+                        },
+                        {
+                            "type": "text",
+                            "name": "student_name",
+                            "title": "Student name"
+                        },
+                        {
+                            "type": "text",
+                            "name": "thesis_title",
+                            "title": "Thesis title"
+                        },
+                        {
+                            "type": "dropdown",
+                            "name": "career_pursued",
+                            "title": "Career pursued",
+                            "choices": [
+                                "Academic",
+                                "Industry"
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "name": "current_work_location",
+                            "title": "Current work location"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        /* =========================
+        H. Awards and Distinctions
+        ========================= */
+        {
+            "type": "panel",
+            "name": "awards",
+            "title": "H. Contributions to FutureFinTech – Awards and Distinctions",
+            "elements": [
+                {
+                    "type": "boolean",
+                    "name": "awards_na",
+                    "title": "Not applicable"
+                },
+                {
+                    "type": "paneldynamic",
+                    "name": "awards",
+                    "title": "Awards",
+                    "visibleIf": "{awards_na} = false",
+                    "panelAddText": "Add an award",
+                    "panelRemoveText": "Remove",
+                    "valueName": "awards",
+                    "templateElements": [
+                        {
+                            "type": "datepicker",
+                            "name": "award_date",
+                            "title": "Award date",
+                            "dateFormat": "yyyy-mm-dd"
+                        },
+                        {
+                            "type": "text",
+                            "name": "award_title",
+                            "title": "Award title"
+                        },
+                        {
+                            "type": "text",
+                            "name": "award_subject",
+                            "title": "Subject / Topic"
+                        },
+                        {
+                            "type": "text",
+                            "name": "award_issuer",
+                            "title": "Issuing organization"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        /* =========================
+        I. Press and Media Appearances
+        ========================= */
+        {
+            "type": "panel",
+            "name": "press",
+            "title": "I. Contributions to FutureFinTech – Press and Media Appearances",
+            "elements": [
+                {
+                    "type": "boolean",
+                    "name": "press_na",
+                    "title": "Not applicable"
+                },
+                {
+                    "type": "paneldynamic",
+                    "name": "press",
+                    "title": "Press",
+                    "visibleIf": "{press_na} = false",
+                    "panelAddText": "Add a press appearance",
+                    "panelRemoveText": "Remove",
+                    "valueName": "press",
+                    "templateElements": [
+                        {
+                            "type": "datepicker",
+                            "name": "appearance_date",
+                            "title": "Date of appearance",
+                            "dateFormat": "yyyy-mm-dd"
+                        },
+                        {
+                            "type": "text",
+                            "name": "press_name",
+                            "title": "Media outlet"
+                        },
+                        {
+                            "type": "dropdown",
+                            "name": "press_type",
+                            "title": "Media type",
+                            "choices": [
+                                "National",
+                                "International"
+                            ]
+                        },
+                        {
+                            "type": "text",
+                            "name": "appearance_type",
+                            "title": "Type of appearance (interview, article, etc.)"
+                        },
+                        {
+                            "type": "text",
+                            "name": "subject",
+                            "title": "Subject covered"
+                        }
+                    ]
+                }
+            ]
+        },
+
+        /* =========================
+        J. Planned Contributions
+        ========================= */
         {
             "name": "planned_contributions",
-            "title": "4. Planned Contributions",
+            "title": "J. Planned Contributions",
             "elements": [
                 {
                     "type": "comment",
@@ -191,9 +448,13 @@ const surveyJson = {
                 }
             ]
         },
+
+        /* =========================
+        K. Feedback
+        ========================= */
         {
             "name": "feedback",
-            "title": "5. Feedback",
+            "title": "K. Feedback",
             "elements": [
                 {
                     "type": "rating",
@@ -221,6 +482,8 @@ const surveyJson = {
 };
 
 const survey = new Survey.Model(surveyJson);
+// survey.applyTheme(SurveyTheme.ContrastLight);
+// survey.applyTheme(SurveyTheme.LayeredLight);
 
 // ----------------------------------
 // Helpers
@@ -231,8 +494,14 @@ function getApplicationIdFromUrl() {
     return params.get("app");
 }
 
+function setApplicationIdInUrl(applicationId) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("app", applicationId);
+    window.history.replaceState({}, "", url.toString());
+}
+
 // Fields to move under "applicant"
-const applicantFields = ["email", "name", "surname", "applicant_type", "discipline", "events_na", "grants_na", "publications_na"];
+const applicantFields = ["email", "name", "surname", "applicant_type", "discipline", "awards_na", "phd_students_na", "press_na", "partnerships_na", "events_na", "grants_na", "publications_na"];
 
 /**
  * Converts flat form data into nested form with "applicant"
@@ -242,7 +511,7 @@ const applicantFields = ["email", "name", "surname", "applicant_type", "discipli
 function nestApplicant(data) {
     const nested = { ...data }; // copy original
     nested.applicant = {};
-    
+
     applicantFields.forEach(field => {
         if (field in nested) {
             nested.applicant[field] = nested[field];
@@ -292,6 +561,22 @@ async function apiRequest(url, method, data = null) {
     return response.json();
 }
 
+function renderTopNav() {
+    document.getElementById("startNewBtn").onclick = () => {
+        window.location.href = window.location.origin + window.location.pathname;
+    };
+
+    document.getElementById("resumeBtn").onclick = async () => {
+        const id = document.getElementById("applicationIdInput").value.trim();
+        try {
+            await loadApplication(id);
+            setApplicationIdInUrl(id);
+        } catch {
+            survey.notify("Invalid application ID.", "error");
+        }
+    };
+}
+
 // ----------------------------------
 // Load existing application (EDIT)
 // ----------------------------------
@@ -302,7 +587,7 @@ async function loadApplication(applicationId) {
         survey.data = flattenApplicant(data);
     } catch (err) {
         console.error("Failed to load application", err);
-        alert("Unable to load application. The link may be invalid.");
+        survey.notify("Unable to load application. The link may be invalid.", "error");
         // Reload the page but remove any query parameters
         window.location.href = window.location.origin + window.location.pathname;
     }
@@ -311,6 +596,36 @@ async function loadApplication(applicationId) {
 // ----------------------------------
 // Save (CREATE or UPDATE)
 // ----------------------------------
+
+async function saveDraft(survey) {
+    const applicationId = getApplicationIdFromUrl();
+    const isUpdate = Boolean(applicationId);
+
+    try {
+        survey.currentPage.validate();
+        const result = await apiRequest(
+            isUpdate
+                ? `${API_BASE}/${applicationId}?status=draft`
+                : `${API_BASE}?status=draft`,
+            isUpdate ? "PUT" : "POST",
+            nestApplicant(survey.data)
+        );
+
+        if (!isUpdate && result.application_id) {
+            window.history.replaceState(
+                {},
+                "",
+                `?app=${result.application_id}`
+            );
+        }
+
+        survey.notify("Draft saved successfully", "success");
+
+    } catch (err) {
+        survey.notify("Unable to save draft. Ensure the all personal information of applicant are filled.", "error");
+        console.error(err);
+    }
+}
 
 async function saveApplication(sender) {
     const applicationId = getApplicationIdFromUrl();
@@ -327,7 +642,7 @@ async function saveApplication(sender) {
             // Redirect to edit URL returned by backend
             window.location.href = `${result.edit_url}`;
         } else {
-            alert("Application updated successfully.");
+            survey.notify("Application updated successfully.", "success");
         }
 
     } catch (err) {
@@ -341,7 +656,7 @@ async function saveApplication(sender) {
 
 function handleValidationErrors(err, survey) {
     if (err.status !== 422 || !err.data?.detail) {
-        alert("An unexpected error occurred while saving.");
+        survey.notify("An unexpected error occurred while saving.", "error");
         console.error(err);
         return;
     }
@@ -387,5 +702,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         await loadApplication(applicationId);
     }
 
+    survey.addNavigationItem({
+        id: "save-draft",
+        title: "Save for later",
+        action: () => saveDraft(survey),
+    });
+
     survey.render(document.getElementById("surveyContainer"));
+    survey.onCurrentPageChanged.add(renderTopNav);
+    renderTopNav();
 });
