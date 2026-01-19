@@ -1,16 +1,16 @@
 // const SURVEY_ID = 1;
-const API_BASE = "http://127.0.0.1:8000/api/applications";
+const API_BASE = "http://127.0.0.1:8000/api/submissions";
 
 const surveyJson = {
     "title": "2026 FutureFintech Fellows Survey Form",
     "showQuestionNumbers": "on",
     "pages": [
         /* =========================
-        A. Applicant information
+        A. Contributor information
         ========================= */
         {
-            "name": "applicant_information",
-            "title": "A. Applicant Information",
+            "name": "contributor_information",
+            "title": "A. Contributor Information",
             "elements": [
                 {
                     "type": "text",
@@ -40,8 +40,8 @@ const surveyJson = {
                 },
                 {
                     "type": "radiogroup",
-                    "name": "applicant_type",
-                    "title": "Applicant Type",
+                    "name": "contributor_type",
+                    "title": "Contributor Type",
                     "isRequired": true,
                     "choices": ["Fellow", "Affiliated Researcher"]
                 },
@@ -49,7 +49,7 @@ const surveyJson = {
                     "type": "text",
                     "name": "affiliated_fellow_email",
                     "title": "Affiliated Fellow Email Address",
-                    "visibleIf": "{applicant_type} = 'Affiliated Researcher'",
+                    "visibleIf": "{contributor_type} = 'Affiliated Researcher'",
                     "isRequired": true,
                     "inputType": "email",
                     "validators": [
@@ -489,32 +489,32 @@ const survey = new Survey.Model(surveyJson);
 // Helpers
 // ----------------------------------
 
-function getApplicationIdFromUrl() {
+function getSubmissionIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("app");
 }
 
-function setApplicationIdInUrl(applicationId) {
+function setSubmissionIdInUrl(submissionId) {
     const url = new URL(window.location.href);
-    url.searchParams.set("app", applicationId);
+    url.searchParams.set("app", submissionId);
     window.history.replaceState({}, "", url.toString());
 }
 
-// Fields to move under "applicant"
-const applicantFields = ["email", "name", "surname", "applicant_type", "affiliated_fellow_email", "discipline", "awards_na", "phd_students_na", "press_na", "partnerships_na", "events_na", "grants_na", "publications_na"];
+// Fields to move under "contributor"
+const contributorFields = ["email", "name", "surname", "contributor_type", "affiliated_fellow_email", "discipline", "awards_na", "phd_students_na", "press_na", "partnerships_na", "events_na", "grants_na", "publications_na"];
 
 /**
- * Converts flat form data into nested form with "applicant"
+ * Converts flat form data into nested form with "contributor"
  * @param {Object} data - flat form data
  * @returns {Object} - nested form data
  */
-function nestApplicant(data) {
+function nestContributor(data) {
     const nested = { ...data }; // copy original
-    nested.applicant = {};
+    nested.contributor = {};
 
-    applicantFields.forEach(field => {
+    contributorFields.forEach(field => {
         if (field in nested) {
-            nested.applicant[field] = nested[field];
+            nested.contributor[field] = nested[field];
             delete nested[field]; // remove from top-level
         }
     });
@@ -523,28 +523,28 @@ function nestApplicant(data) {
 }
 
 /**
- * Flattens nested form data, moving "applicant" fields back to top-level
+ * Flattens nested form data, moving "contributor" fields back to top-level
  * @param {Object} data - nested form data
  * @returns {Object} - flat form data
  */
-function flattenApplicant(data) {
-    if (!data.applicant) return { ...data }; // nothing to flatten
+function flattenContributor(data) {
+    if (!data.contributor) return { ...data }; // nothing to flatten
 
     const flat = { ...data };
-    applicantFields.forEach(field => {
-        if (field in flat.applicant) {
-            flat[field] = flat.applicant[field];
+    contributorFields.forEach(field => {
+        if (field in flat.contributor) {
+            flat[field] = flat.contributor[field];
         }
     });
 
-    delete flat.applicant; // remove the nested object
+    delete flat.contributor; // remove the nested object
     return flat;
 }
 
 async function apiRequest(url, method, data = null) {
     const options = {
         method,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "submission/json" }
     };
 
     if (data) {
@@ -567,32 +567,32 @@ function renderTopNav() {
     };
 
     document.getElementById("resumeBtn").onclick = async () => {
-        const id = document.getElementById("applicationIdInput").value.trim();
+        const id = document.getElementById("submissionIdInput").value.trim();
         if (!id) {
-            survey.notify("Provide an application ID.", "error");
+            survey.notify("Provide an submission ID.", "error");
             return;
         }
         try {
-            await loadApplication(id, reload=false);
-            setApplicationIdInUrl(id);
+            await loadSubmission(id, reload=false);
+            setSubmissionIdInUrl(id);
         } catch {
-            survey.notify("Invalid application ID.", "error");
+            survey.notify("Invalid submission ID.", "error");
         }
     };
 }
 
 // ----------------------------------
-// Load existing application (EDIT)
+// Load existing submission (EDIT)
 // ----------------------------------
 
-async function loadApplication(applicationId, reload=true) {
+async function loadSubmission(submissionId, reload=true) {
     try {
-        const data = await apiRequest(`${API_BASE}/${applicationId}`, "GET");
-        survey.data = flattenApplicant(data);
-        document.getElementById("applicationIdInput").value = applicationId;
+        const data = await apiRequest(`${API_BASE}/${submissionId}`, "GET");
+        survey.data = flattenContributor(data);
+        document.getElementById("submissionIdInput").value = submissionId;
     } catch (err) {
-        console.error("Failed to load application", err);
-        survey.notify("Unable to load application #" + applicationId, "error");
+        console.error("Failed to load submission", err);
+        survey.notify("Unable to load submission #" + submissionId, "error");
         if (reload) {
             // Reload the page but remove any query parameters
             window.location.href = window.location.origin + window.location.pathname;
@@ -605,53 +605,53 @@ async function loadApplication(applicationId, reload=true) {
 // ----------------------------------
 
 async function saveDraft(survey) {
-    const applicationId = getApplicationIdFromUrl();
-    const isUpdate = Boolean(applicationId);
+    const submissionId = getSubmissionIdFromUrl();
+    const isUpdate = Boolean(submissionId);
 
     try {
         survey.currentPage.validate();
         const result = await apiRequest(
             isUpdate
-                ? `${API_BASE}/${applicationId}?status=draft`
+                ? `${API_BASE}/${submissionId}?status=draft`
                 : `${API_BASE}?status=draft`,
             isUpdate ? "PUT" : "POST",
-            nestApplicant(survey.data)
+            nestContributor(survey.data)
         );
 
-        if (!isUpdate && result.application_id) {
+        if (!isUpdate && result.submission_id) {
             window.history.replaceState(
                 {},
                 "",
-                `?app=${result.application_id}`
+                `?app=${result.submission_id}`
             );
         }
 
         survey.notify("Draft saved successfully", "success");
-        document.getElementById("applicationIdInput").value = applicationId;
+        document.getElementById("submissionIdInput").value = submissionId;
 
     } catch (err) {
-        survey.notify("Unable to save draft. Ensure the all personal information of applicant are filled.", "error");
+        survey.notify("Unable to save draft. Ensure the all personal information of contributor are filled.", "error");
         console.error(err);
     }
 }
 
-async function saveApplication(sender) {
-    const applicationId = getApplicationIdFromUrl();
-    const isUpdate = Boolean(applicationId);
+async function saveSubmission(sender) {
+    const submissionId = getSubmissionIdFromUrl();
+    const isUpdate = Boolean(submissionId);
 
     try {
         const result = await apiRequest(
-            isUpdate ? `${API_BASE}/${applicationId}` : API_BASE,
+            isUpdate ? `${API_BASE}/${submissionId}` : API_BASE,
             isUpdate ? "PUT" : "POST",
-            nestApplicant(sender.data)
+            nestContributor(sender.data)
         );
 
         if (!isUpdate) {
             // Redirect to edit URL returned by backend
             window.location.href = `${result.edit_url}`;
         } else {
-            document.getElementById("applicationIdInput").value = applicationId;
-            survey.notify("Application updated successfully.", "success");
+            document.getElementById("submissionIdInput").value = submissionId;
+            survey.notify("Submission updated successfully.", "success");
         }
 
     } catch (err) {
@@ -675,7 +675,7 @@ function handleValidationErrors(err, survey) {
 
     err.data.detail.forEach(error => {
         // Example FastAPI error path:
-        // ["body", "applicant", "email"]
+        // ["body", "contributor", "email"]
         const path = error.loc.slice(1).join(".");
         const question = survey.getQuestionByName(path);
 
@@ -692,12 +692,12 @@ function handleValidationErrors(err, survey) {
 // ----------------------------------
 
 survey.onComplete.add(sender => {
-    saveApplication(sender);
+    saveSubmission(sender);
 });
 
 // Optional: auto-save draft
 // survey.onValueChanged.add(Survey.FunctionFactory.Instance.create("autoSave", () => {
-//   saveApplication(survey);
+//   saveSubmission(survey);
 // }));
 
 // ----------------------------------
@@ -705,10 +705,10 @@ survey.onComplete.add(sender => {
 // ----------------------------------
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const applicationId = getApplicationIdFromUrl();
+    const submissionId = getSubmissionIdFromUrl();
 
-    if (applicationId) {
-        await loadApplication(applicationId);
+    if (submissionId) {
+        await loadSubmission(submissionId);
     }
 
     survey.addNavigationItem({

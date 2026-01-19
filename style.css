@@ -16,7 +16,7 @@ body {
     margin-bottom: 5px;
 }
 
-#topNav #applicationIdInput {
+#topNav #submissionIdInput {
     text-indent: 10px;
     height: 30px;
     border-radius: 5px;
@@ -24,7 +24,7 @@ body {
     margin-bottom: 5px;
 }
 
-#topNav #applicationIdInput:focus {
+#topNav #submissionIdInput:focus {
     border: 1px #18B394 solid; 
 }
 

@@ -6,8 +6,8 @@ from openpyxl import Workbook
 
 from database import get_db
 from models import (
-    Application,
-    ApplicantInfo,
+    Submission,
+    ContributorInfo,
     Event,
     Publication,
     GrantProject,
@@ -31,18 +31,18 @@ def write_table_sheet(wb, title, columns, rows):
 
     autosize_columns(ws)
 
-def write_applicants_sheet(wb, db: Session):
-    ws = wb.create_sheet(title="Applicants")
+def write_contributors_sheet(wb, db: Session):
+    ws = wb.create_sheet(title="Contributors")
 
     headers = [
-        "application_id",
+        "submission_id",
         "created_at",
         "updated_at",
         "status",
         "email",
         "name",
         "surname",
-        "applicant_type",
+        "contributor_type",
         "affiliated_fellow_email",
         "discipline",
         "events_na",
@@ -57,75 +57,75 @@ def write_applicants_sheet(wb, db: Session):
     ws.append(headers)
 
     rows = (
-        db.query(Application, ApplicantInfo)
-        .join(ApplicantInfo, ApplicantInfo.application_id == Application.application_id)
+        db.query(Submission, ContributorInfo)
+        .join(ContributorInfo, ContributorInfo.submission_id == Submission.submission_id)
         .all()
     )
 
-    for app, applicant in rows:
+    for app, contributor in rows:
         ws.append([
-            app.application_id,
+            app.submission_id,
             app.created_at,
             app.updated_at,
             app.status,
-            applicant.email,
-            applicant.name,
-            applicant.surname,
-            applicant.applicant_type,
-            applicant.affiliated_fellow_email,
-            applicant.discipline,
-            applicant.events_na,
-            applicant.grants_na,
-            applicant.publications_na,
-            applicant.awards_na,
-            applicant.partnerships_na,
-            applicant.phd_students_na,
-            applicant.press_na,
+            contributor.email,
+            contributor.name,
+            contributor.surname,
+            contributor.contributor_type,
+            contributor.affiliated_fellow_email,
+            contributor.discipline,
+            contributor.events_na,
+            contributor.grants_na,
+            contributor.publications_na,
+            contributor.awards_na,
+            contributor.partnerships_na,
+            contributor.phd_students_na,
+            contributor.press_na,
         ])
 
     autosize_columns(ws)
 
-@router.get("/applications.xlsx")
-def export_applications(db: Session = Depends(get_db)):
+@router.get("/submissions.xlsx")
+def export_submissions(db: Session = Depends(get_db)):
     wb = Workbook()
     wb.remove(wb.active)  # remove default empty sheet
 
-    # Applicants (custom)
-    write_applicants_sheet(wb, db)
+    # Contributors (custom)
+    write_contributors_sheet(wb, db)
 
     # Generic sheets
     write_table_sheet(
         wb,
         "Events",
-        ["application_id", "event_date", "event_name", "event_type", "location", "role"],
+        ["submission_id", "event_date", "event_name", "event_type", "location", "role"],
         db.query(Event).all()
     )
 
     write_table_sheet(
         wb,
         "Publications",
-        ["application_id", "publication_name", "publication_date", "orbilu_link", "mixed_gender", "mixed_team"],
+        ["submission_id", "publication_name", "publication_date", "orbilu_link", "mixed_gender", "mixed_team"],
         db.query(Publication).all()
     )
 
     write_table_sheet(
         wb,
         "Grants",
-        ["application_id", "project_name", "funder", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
+        ["submission_id", "project_name", "funder", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
         db.query(GrantProject).all()
     )
 
     write_table_sheet(
         wb,
         "Awards",
-        ["application_id", "award_date", "award_title", "award_subject", "award_issuer"],
+        ["submission_id", "award_date", "award_title", "award_subject", "award_issuer"],
         db.query(Award).all()
     )
 
     write_table_sheet(
         wb,
         "PhD Students",
-        ["application_id", "graduation_date", "student_name", "thesis_title",
+        ["submission_id", "graduation_date", "student_name", "thesis_title",
          "career_pursued", "current_work_location"],
         db.query(PhDStudent).all()
     )
@@ -133,7 +133,7 @@ def export_applications(db: Session = Depends(get_db)):
     write_table_sheet(
         wb,
         "Press",
-        ["application_id", "appearance_date", "press_name", "press_type",
+        ["submission_id", "appearance_date", "press_name", "press_type",
          "appearance_type", "subject"],
         db.query(PressAppearance).all()
     )
@@ -141,7 +141,7 @@ def export_applications(db: Session = Depends(get_db)):
     write_table_sheet(
         wb,
         "Partnerships",
-        ["application_id", "project_name", "start_date",
+        ["submission_id", "project_name", "start_date",
          "partnership_type", "partner", "acquired_funding"],
         db.query(PartnershipProject).all()
     )
@@ -155,6 +155,6 @@ def export_applications(db: Session = Depends(get_db)):
         output,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={
-            "Content-Disposition": "attachment; filename=applications_export.xlsx"
+            "Content-Disposition": "attachment; filename=submissions_export.xlsx"
         }
     )

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import router as applications_router
+from routers import router as submissions_router
 from export import router as exports_router
 from database import Base, engine
 
@@ -22,5 +22,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(applications_router)
+app.include_router(submissions_router)
 app.include_router(exports_router)

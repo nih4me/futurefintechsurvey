@@ -3,7 +3,7 @@ import string
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 
-def generate_application_id():
+def generate_submission_id():
     alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
     token = "".join(secrets.choice(alphabet) for _ in range(8))
     return f"FTF-2026-{token}"

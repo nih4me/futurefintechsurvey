@@ -3,14 +3,14 @@ from typing import List, Optional
 from datetime import date
 
 # ----------------------------
-# Applicant Information
+# Contributor Information
 # ----------------------------
 
-class ApplicantInfoSchema(BaseModel):
+class ContributorInfoSchema(BaseModel):
     email: EmailStr
     name: str
     surname: str
-    applicant_type: str
+    contributor_type: str
     affiliated_fellow_email: Optional[EmailStr] = None
     discipline: str
     events_na: Optional[bool] = False
@@ -86,9 +86,9 @@ class PressAppearanceSchema(BaseModel):
 # Survey Root Payload
 # ----------------------------
 
-class ApplicationSurveySchema(BaseModel):
-    # Applicant
-    applicant: ApplicantInfoSchema
+class SubmissionSurveySchema(BaseModel):
+    # Contributor
+    contributor: ContributorInfoSchema
 
     # Narrative
     narrative: str = Field(..., max_length=250)

@@ -1,18 +1,18 @@
 from sqlalchemy.orm import Session
 from models import (
-    Application, ApplicantInfo, Narrative, PlannedContribution, Feedback,
+    Submission, ContributorInfo, Narrative, PlannedContribution, Feedback,
     Event, GrantProject, PartnershipProject,
     Publication, PhDStudent, Award, PressAppearance
 )
-from utils import generate_application_id
+from utils import generate_submission_id
 
-def save_application(db, app_id, data):
+def save_submission(db, app_id, data):
     # Root tables (UPSERT)
-    db.merge(Application(application_id=app_id))
-    db.merge(ApplicantInfo(application_id=app_id, **data["applicant"]))
-    db.merge(Narrative(application_id=app_id, narrative=data["narrative"]))
-    db.merge(PlannedContribution(application_id=app_id, planned_text=data["planned"]))
-    db.merge(Feedback(application_id=app_id, **data.get("feedback", {})))
+    db.merge(Submission(submission_id=app_id))
+    db.merge(ContributorInfo(submission_id=app_id, **data["contributor"]))
+    db.merge(Narrative(submission_id=app_id, narrative=data["narrative"]))
+    db.merge(PlannedContribution(submission_id=app_id, planned_text=data["planned"]))
+    db.merge(Feedback(submission_id=app_id, **data.get("feedback", {})))
 
     # Dynamic panels (DELETE + INSERT)
     TABLES = [
@@ -21,30 +21,30 @@ def save_application(db, app_id, data):
     ]
 
     for table in TABLES:
-        db.query(table).filter(table.application_id == app_id).delete()
+        db.query(table).filter(table.submission_id == app_id).delete()
 
     for ev in data.get("events", []):
-        db.add(Event(application_id=app_id, **ev))
+        db.add(Event(submission_id=app_id, **ev))
 
     for g in data.get("grants", []):
-        db.add(GrantProject(application_id=app_id, **g))
+        db.add(GrantProject(submission_id=app_id, **g))
 
     for p in data.get("partnerships", []):
-        db.add(PartnershipProject(application_id=app_id, **p))
+        db.add(PartnershipProject(submission_id=app_id, **p))
 
     for pub in data.get("publications", []):
-        db.add(Publication(application_id=app_id, **pub))
+        db.add(Publication(submission_id=app_id, **pub))
 
     for phd in data.get("phd_students", []):
-        db.add(PhDStudent(application_id=app_id, **phd))
+        db.add(PhDStudent(submission_id=app_id, **phd))
 
     for a in data.get("awards", []):
-        db.add(Award(application_id=app_id, **a))
+        db.add(Award(submission_id=app_id, **a))
 
     for press in data.get("press", []):
-        db.add(PressAppearance(application_id=app_id, **press))
+        db.add(PressAppearance(submission_id=app_id, **press))
 
     db.commit()
 
-def update_application(db: Session, app_id: str, data):
+def update_submission(db: Session, app_id: str, data):
     pass
