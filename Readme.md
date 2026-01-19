@@ -1,6 +1,7 @@
 ## FutureFinTech : Fellow Survey
 
 ### Project structure
+```text
 futurefintechsurvey/
 ├── .gitignore
 ├── backend/
@@ -18,6 +19,7 @@ futurefintechsurvey/
 ├── futurefintech_form.js
 ├── index.html
 └── style.css
+```
 
 ### Requirements
 - Python 3.9+
