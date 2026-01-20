@@ -1,0 +1,19 @@
+services:
+  caddy:
+    image: caddy:2.10.2
+    container_name: futurefintechsurvey_caddy
+    restart: always
+    ports:
+      - 8001:8001
+    volumes:
+      - ./config/caddy:/etc/caddy/:ro
+      - ./data/caddy:/data
+      - ./static/:/static
+    environment:
+      LOG_FILE: "/data/access.log"
+      CADDY_DOMAIN: "http://localhost"
+      CADDY_PORT: "8001"
+      CADDY_ENVIRONMENT: "development"
+  api:
+    image: futurefintechsurvey:latest
+    container_name: futurefintechsurvey_api
