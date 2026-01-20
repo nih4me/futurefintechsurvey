@@ -71,7 +71,7 @@ def create_submission(payload: SubmissionSurveySchema, status: str = "submitted"
 
     return {
         "submission_id": submission_id,
-        "edit_url": f"/edit?app={submission_id}"
+        "edit_url": f"?app={submission_id}"
     }
 
 
