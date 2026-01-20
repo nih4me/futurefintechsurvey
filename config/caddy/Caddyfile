@@ -4,6 +4,7 @@
 	header @origin Access-Control-Allow-Methods "OPTIONS,HEAD,GET,POST,PUT,PATCH,DELETE"
 }
 
+
 {$CADDY_DOMAIN}:{$CADDY_PORT} {
   log {
     format console
@@ -12,12 +13,15 @@
       roll_keep 10
     }
   }
+
+  @api path /api/* /edit/* /export/* /docs/*
   
-  handle /api/* {
+  handle @api {
     reverse_proxy futurefintechsurvey_api:8000 {
         header_up X-Real-IP {remote_host}
       }
   }
+  
   import cors ${CADDY_DOMAIN}:{$CADDY_PORT}
   root * /static
   file_server 
