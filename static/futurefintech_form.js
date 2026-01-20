@@ -544,7 +544,7 @@ function flattenContributor(data) {
 async function apiRequest(url, method, data = null) {
   const options = {
     method,
-    headers: { "Content-Type": "submission/json" }
+    headers: { "Content-Type": "application/json" }
   };
 
   if (data) {
