@@ -17,3 +17,5 @@ services:
   api:
     image: futurefintechsurvey:latest
     container_name: futurefintechsurvey_api
+    volumes:
+      - ./data/db:/db
