@@ -91,7 +91,7 @@ class SubmissionSurveySchema(BaseModel):
     contributor: ContributorInfoSchema
 
     # Narrative
-    narrative: str = Field(..., max_length=250)
+    narrative: Optional[str] = None
 
     # Dynamic panels
     events: List[EventSchema] = []
@@ -103,7 +103,7 @@ class SubmissionSurveySchema(BaseModel):
     press: List[PressAppearanceSchema] = []
 
     # Planned contributions
-    planned_contributions: str = Field(..., max_length=150)
+    planned_contributions: Optional[str] = None
 
     # Feedback
     form_intuitive: Optional[int] = None
