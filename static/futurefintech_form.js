@@ -1,5 +1,5 @@
 // const SURVEY_ID = 1;
-const API_BASE = "http://localhost:8001/api/submissions";
+const API_BASE = "http://ttodevthree.uni.lux:8080/api/submissions";
 
 const surveyJson = {
   "title": "2026 FutureFintech Fellows Survey Form",
