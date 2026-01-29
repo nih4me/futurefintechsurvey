@@ -24,13 +24,13 @@ class ContributorInfo(Base):
     contributor_type = Column(Enum("Fellow", "Affiliated Researcher"))
     affiliated_fellow_email = Column(String(255))
     discipline = Column(Enum("Finance and Economics", "Technology", "Law"))
-    events_na = Column(Boolean)
-    grants_na = Column(Boolean)
-    publications_na = Column(Boolean)
-    awards_na = Column(Boolean)
-    partnerships_na = Column(Boolean)
-    phd_students_na = Column(Boolean)
-    press_na = Column(Boolean)
+    has_events = Column(Boolean)
+    has_new_fundings = Column(Boolean)
+    has_publications = Column(Boolean)
+    has_awards = Column(Boolean)
+    has_partnerships = Column(Boolean)
+    has_phd_students = Column(Boolean)
+    has_press = Column(Boolean)
     
 
 class Narrative(Base):

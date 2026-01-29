@@ -45,13 +45,13 @@ def write_contributors_sheet(wb, db: Session):
         "contributor_type",
         "affiliated_fellow_email",
         "discipline",
-        "events_na",
-        "grants_na",
-        "publications_na",
-        "awards_na",
-        "partnerships_na",
-        "phd_students_na",
-        "press_na",
+        "has_events",
+        "has_new_fundings",
+        "has_publications",
+        "has_awards",
+        "has_partnerships",
+        "has_phd_students",
+        "has_press",
     ]
 
     ws.append(headers)
@@ -74,13 +74,13 @@ def write_contributors_sheet(wb, db: Session):
             contributor.contributor_type,
             contributor.affiliated_fellow_email,
             contributor.discipline,
-            contributor.events_na,
-            contributor.grants_na,
-            contributor.publications_na,
-            contributor.awards_na,
-            contributor.partnerships_na,
-            contributor.phd_students_na,
-            contributor.press_na,
+            contributor.has_events,
+            contributor.has_new_fundings,
+            contributor.has_publications,
+            contributor.has_awards,
+            contributor.has_partnerships,
+            contributor.has_phd_students,
+            contributor.has_press,
         ])
 
     autosize_columns(ws)

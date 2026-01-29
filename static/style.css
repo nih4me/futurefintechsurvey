@@ -3,10 +3,91 @@ body {
     margin: 0;
 }
 
+div[id^="sp_"] {
+    padding-top: 10px !important;
+    margin-top: 0;
+}
+
+.sd-container-modern__title {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.sd-progress-buttons__container-center {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
 #topNav {
-    padding: 10px;
-    background-color: #18B394;
-    text-align: right;
+    position: sticky;
+    top: 0; /* distance from top */
+    z-index: 1000; /* stay above other elements */
+    background: #fff; /* must set background to avoid transparency */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #049DD9;
+
+}
+
+/* Left (logo) */
+.nav-left {
+  flex: 0 0 auto;
+}
+
+.nav-left * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.title {
+    margin-left: 10px;
+    color: #fff;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.nav-logo {
+  height: 40px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+/* Right (input + buttons) */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Mobile layout */
+@media (max-width: 640px) {
+  #topNav {
+    position: relative;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-left {
+    display: flex;
+    justify-content: center;
+  }
+
+  .nav-right {
+    justify-content: center;
+  }
+
+  #submissionIdInput {
+    width: 100%;
+  }
+}
+
+#topNav button {
+    color: #049DD9 !important;
 }
 
 #topNav .small {
@@ -25,7 +106,7 @@ body {
 }
 
 #topNav #submissionIdInput:focus {
-    border: 1px #18B394 solid; 
+    border: 1px #049DD9 solid; 
 }
 
 .modal {

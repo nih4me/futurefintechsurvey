@@ -13,13 +13,13 @@ class ContributorInfoSchema(BaseModel):
     contributor_type: str
     affiliated_fellow_email: Optional[EmailStr] = None
     discipline: str
-    events_na: Optional[bool] = False
-    grants_na: Optional[bool] = False
-    publications_na: Optional[bool] = False
-    awards_na: Optional[bool] = False
-    partnerships_na: Optional[bool] = False
-    phd_students_na: Optional[bool] = False
-    press_na: Optional[bool] = False
+    has_events: Optional[bool] = False
+    has_new_fundings: Optional[bool] = False
+    has_publications: Optional[bool] = False
+    has_awards: Optional[bool] = False
+    has_partnerships: Optional[bool] = False
+    has_phd_students: Optional[bool] = False
+    has_press: Optional[bool] = False
 
 # ----------------------------
 # Dynamic Panels
