@@ -1,36 +1,35 @@
 body {
-    padding: 0;
-    margin: 0;
+  padding: 0;
+  margin: 0;
 }
 
 div[id^="sp_"] {
-    padding-top: 10px !important;
-    margin-top: 0;
+  padding-top: 10px !important;
+  margin-top: 0;
 }
 
 .sd-container-modern__title {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
 }
 
 .sd-progress-buttons__container-center {
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 #topNav {
-    position: sticky;
-    top: 0; /* distance from top */
-    z-index: 1000; /* stay above other elements */
-    background: #fff; /* must set background to avoid transparency */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e5e7eb;
-    background: #049DD9;
-
+  position: sticky;
+  top: 0; /* distance from top */
+  z-index: 1000; /* stay above other elements */
+  background: #fff; /* must set background to avoid transparency */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #049DD9;
 }
 
 /* Left (logo) */
@@ -39,15 +38,15 @@ div[id^="sp_"] {
 }
 
 .nav-left * {
-    display: inline-block;
-    vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .title {
-    margin-left: 10px;
-    color: #fff;
-    font-size: x-large;
-    font-weight: bold;
+  margin-left: 10px;
+  color: #fff;
+  font-size: x-large;
+  font-weight: bold;
 }
 
 .nav-logo {
@@ -91,48 +90,59 @@ div[id^="sp_"] {
 }
 
 #topNav .small {
-    font-size: small !important;
-    height: 30px !important;
-    line-height: 0px !important;
-    margin-bottom: 5px;
+  font-size: small !important;
+  height: 30px !important;
+  line-height: 0px !important;
+  margin-bottom: 5px;
+  border-radius: 0px;
 }
 
 #topNav #submissionIdInput {
-    text-indent: 10px;
-    height: 30px;
-    border-radius: 5px;
-    border: 1px #f5f5f5 solid; 
-    margin-bottom: 5px;
+  text-indent: 10px;
+  height: 30px;
+  border-radius: 0px;
+  border: 1px #f5f5f5 solid; 
+  margin-bottom: 5px;
+}
+
+#download-btn {
+  vertical-align: middle;
+  font-size: 20px;
+  color: #fff;
+}
+
+#download-btn:hover {
+  cursor: pointer;
 }
 
 #topNav #submissionIdInput:focus {
-    border: 1px #049DD9 solid; 
+  border: 1px #049DD9 solid; 
 }
 
 .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
 }
 
 .modal-content {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 6px;
-    width: 400px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 6px;
+  width: 400px;
 }
 
 .modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 .error {
-    color: red;
-    margin-top: 0.5rem;
+  color: red;
+  margin-top: 0.5rem;
 }
