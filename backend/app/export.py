@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from io import BytesIO
 from openpyxl import Workbook
 
+from typing import Optional
+
 from database import get_db
 from models import (
     Submission,
@@ -93,33 +95,38 @@ def export_submissions(db: Session = Depends(get_db)):
     # Contributors (custom)
     write_contributors_sheet(wb, db)
 
+    def get_rows(query, submission_id: Optional[int] = None):
+        if submission_id is not None:
+            query = query.filter_by(submission_id=submission_id)
+        return query.all()
+
     # Generic sheets
     write_table_sheet(
         wb,
         "Events",
         ["submission_id", "event_date", "event_name", "event_type", "location", "role"],
-        db.query(Event).all()
+        get_rows(db.query(Event))
     )
 
     write_table_sheet(
         wb,
         "Publications",
         ["submission_id", "publication_name", "publication_date", "orbilu_link", "mixed_gender", "mixed_team"],
-        db.query(Publication).all()
+        get_rows(db.query(Publication))
     )
 
     write_table_sheet(
         wb,
         "Grants",
-        ["submission_id", "project_name", "funder", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
-        db.query(GrantProject).all()
+        ["submission_id", "project_name", "funder", "role", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
+        get_rows(db.query(GrantProject))
     )
 
     write_table_sheet(
         wb,
         "Awards",
         ["submission_id", "award_date", "award_title", "award_subject", "award_issuer"],
-        db.query(Award).all()
+        get_rows(db.query(Award))
     )
 
     write_table_sheet(
@@ -127,7 +134,7 @@ def export_submissions(db: Session = Depends(get_db)):
         "PhD Students",
         ["submission_id", "graduation_date", "student_name", "thesis_title",
          "career_pursued", "current_work_location"],
-        db.query(PhDStudent).all()
+        get_rows(db.query(PhDStudent))
     )
 
     write_table_sheet(
@@ -135,15 +142,15 @@ def export_submissions(db: Session = Depends(get_db)):
         "Press",
         ["submission_id", "appearance_date", "press_name", "press_type",
          "appearance_type", "subject"],
-        db.query(PressAppearance).all()
+        get_rows(db.query(PressAppearance))
     )
 
     write_table_sheet(
         wb,
         "Partnerships",
         ["submission_id", "project_name", "start_date",
-         "partnership_type", "partner", "acquired_funding"],
-        db.query(PartnershipProject).all()
+         "partnership_type", "role", "partner", "acquired_funding"],
+        get_rows(db.query(PartnershipProject))
     )
 
     # Stream file
