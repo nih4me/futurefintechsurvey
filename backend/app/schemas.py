@@ -39,6 +39,7 @@ class GrantProjectSchema(BaseModel):
     end_date: Optional[date] = None
     funder: Optional[str] = None
     funding_programme: Optional[str] = None
+    role = Optional[str] = None
     mixed_gender: Optional[bool] = False
     mixed_team: Optional[bool] = False
 
@@ -48,6 +49,7 @@ class PartnershipProjectSchema(BaseModel):
     start_date: Optional[date] = None
     partnership_type: Optional[str] = None
     partner: Optional[str] = None
+    role = Optional[str] = None
     acquired_funding: Optional[float] = None
 
 

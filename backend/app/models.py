@@ -70,6 +70,7 @@ class GrantProject(Base):
     end_date = Column(Date)
     funder = Column(Enum("EU", "IAS", "FNR", "Other"))
     funding_programme = Column(String(255))
+    role = Column(String(255))
     mixed_gender = Column(Boolean)
     mixed_team = Column(Boolean)
 
@@ -85,6 +86,7 @@ class PartnershipProject(Base):
     start_date = Column(Date)
     partnership_type = Column(Enum("Industrial", "Governmental"))
     partner = Column(String(255))
+    role = Column(String(255))
     acquired_funding = Column(Numeric(12,2))
 
 class Publication(Base):

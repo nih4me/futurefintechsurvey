@@ -306,6 +306,20 @@ const surveyJson = {
               "choices": ["EU", "IAS", "FNR", "Other"]
             },
             { "type": "text", "name": "funding_programme", "title": "Funding Programme" },
+            {
+              "type": "dropdown",
+              "name": "role",
+              "title": " Your role in the project",
+              "choices": [
+                "Principle Investigator",
+                "Co-Principal Investigator",
+                "Contributor",
+                "WP leader"
+              ],
+              "showOtherItem": true,
+              "otherText": "Other",
+              "otherPlaceholder": "Please specify"
+            },
             { "type": "boolean", "name": "mixed_gender", "title": "Mixed-gender Grant" },
             { "type": "boolean", "name": "mixed_team", "title": "Mixed FDEF-SnT Team Composition" }
           ]
@@ -361,11 +375,25 @@ const surveyJson = {
               "title": "Partner organization"
             },
             {
+              "type": "dropdown",
+              "name": "role",
+              "title": " Your role in the project",
+              "choices": [
+                "Principle Investigator",
+                "Co-Principal Investigator",
+                "Contributor",
+                "WP leader"
+              ],
+              "showOtherItem": true,
+              "otherText": "Other",
+              "otherPlaceholder": "Please specify"
+            },
+            {
               "type": "text",
               "name": "acquired_funding",
               "title": "Acquired funding (€)",
               "inputType": "number"
-            }
+            },
           ]
         }
       ]
