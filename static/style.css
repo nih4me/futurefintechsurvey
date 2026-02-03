@@ -105,13 +105,30 @@ div[id^="sp_"] {
   margin-bottom: 5px;
 }
 
-#download-btn {
+#topNav span {
+  height: 23px;
+  line-height: 23px;
   vertical-align: middle;
-  font-size: 20px;
   color: #fff;
+  border: 1px #fff solid;
+  padding: 5px 5px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
-#download-btn:hover {
+#topNav span small, #topNav span i {
+  vertical-align: middle;
+}
+
+#topNav span i {
+  font-size: 20px;
+}
+
+#topNav span small {
+
+}
+
+#topNav span:hover {
   cursor: pointer;
 }
 
