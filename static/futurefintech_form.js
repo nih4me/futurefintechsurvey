@@ -309,7 +309,10 @@ const surveyJson = {
               "type": "dropdown",
               "name": "funder",
               "title": "Funder",
-              "choices": ["EU", "IAS", "FNR", "Other"]
+              "choices": ["EU", "IAS", "FNR", "Other"],
+               "showOtherItem": true,
+              "otherText": "Other",
+              "otherPlaceholder": "Please specify"
             },
             { "type": "text", "name": "funding_programme", "title": "Funding Programme" },
             {
@@ -364,10 +367,11 @@ const surveyJson = {
               "title": "Project name"
             },
             {
-              "type": "datepicker",
+              "type": "text",
               "name": "start_date",
               "title": "Start date",
-              "dateFormat": "yyyy-mm-dd"
+              "dateFormat": "yyyy-mm-dd",
+              "inputType": "date"
             },
             {
               "type": "dropdown",
@@ -466,10 +470,11 @@ const surveyJson = {
           "valueName": "phd_students",
           "templateElements": [
             {
-              "type": "datepicker",
+              "type": "text",
               "name": "graduation_date",
               "title": "Graduation date",
-              "dateFormat": "yyyy-mm-dd"
+              "dateFormat": "yyyy-mm-dd",
+              "inputType": "date"
             },
             {
               "type": "text",
@@ -526,10 +531,11 @@ const surveyJson = {
           "valueName": "awards",
           "templateElements": [
             {
-              "type": "datepicker",
+              "type": "text",
               "name": "award_date",
               "title": "Award date",
-              "dateFormat": "yyyy-mm-dd"
+              "dateFormat": "yyyy-mm-dd",
+              "inputType": "date"
             },
             {
               "type": "text",
@@ -577,10 +583,11 @@ const surveyJson = {
           "valueName": "press",
           "templateElements": [
             {
-              "type": "datepicker",
+              "type": "text",
               "name": "appearance_date",
               "title": "Date of appearance",
-              "dateFormat": "yyyy-mm-dd"
+              "dateFormat": "yyyy-mm-dd",
+              "inputType": "date"
             },
             {
               "type": "text",
