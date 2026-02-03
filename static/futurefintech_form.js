@@ -229,6 +229,9 @@ const surveyJson = {
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Event {panelIndex}",
           "name": "events",
           "title": "Events",
           "visibleIf": "{has_events} = true",
@@ -291,6 +294,9 @@ const surveyJson = {
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Grant {panelIndex}",
           "name": "grants",
           "title": "Grants",
           "visibleIf": "{has_new_fundings} = true",
@@ -342,6 +348,9 @@ const surveyJson = {
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Partnership {panelIndex}",
           "name": "partnerships",
           "title": "Partnerships",
           "visibleIf": "{has_partnerships} = true",
@@ -413,13 +422,16 @@ const surveyJson = {
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Publication {panelIndex}",
           "name": "publications",
           "title": "Publications",
           "visibleIf": "{has_publications} = true",
           "panelAddText": "Add Publication",
           "templateElements": [
             { "type": "text", "name": "publication_date", "title": "Publication Date", "inputType": "date" },
-            { "type": "text", "name": "publication_name", "title": "Publication Name" },
+            { "type": "text", "name": "publication_name", "title": "Title of publication" },
             { "type": "text", "name": "orbilu_link", "title": "OrbiLu Link", "inputType": "url" },
             { "type": "boolean", "name": "mixed_gender", "title": "Mixed-gender Team Composition" },
             { "type": "boolean", "name": "mixed_team", "title": "Mixed FDEF-SnT Team Composition" }
@@ -443,6 +455,9 @@ const surveyJson = {
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "PhD Student {panelIndex}",
           "name": "phd_students",
           "title": "PhD Students",
           "visibleIf": "{has_phd_students} = true",
@@ -500,6 +515,9 @@ const surveyJson = {
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Award {panelIndex}",
           "name": "awards",
           "title": "Awards",
           "visibleIf": "{has_awards} = true",
@@ -548,6 +566,9 @@ const surveyJson = {
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Press {panelIndex}",
           "name": "press",
           "title": "Press",
           "visibleIf": "{has_press} = true",
