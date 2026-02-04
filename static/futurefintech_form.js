@@ -19,6 +19,11 @@ const surveyJson = {
           type: "html",
           name: "introText",
           html: `
+            <div id="parners-logo" style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
+              <img src="./fnr.jpg" alt="Logo FNR" />
+              <img src="./lux-gov.jpg" alt="Logo Government of Luxembourg" />
+              <img src="./uni.jpg" alt="Logo University of Luxembourg" />
+            </div>
             <div style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
               <p>
                 The objective of the <strong>FutureFinTech Incentive & Reward Scheme</strong> is to recognise 
