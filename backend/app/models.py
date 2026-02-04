@@ -56,6 +56,7 @@ class Event(Base):
     event_type = Column(String(100))
     location = Column(String(150))
     role = Column(String(150))
+    roleComment = Column(String(150))
 
 class GrantProject(Base):
     __tablename__ = "grants_projects"
@@ -69,8 +70,10 @@ class GrantProject(Base):
     start_date = Column(Date)
     end_date = Column(Date)
     funder = Column(Enum("EU", "IAS", "FNR", "Other"))
+    funderComment = Column(String(255))
     funding_programme = Column(String(255))
     role = Column(String(255))
+    roleComment = Column(String(255))
     mixed_gender = Column(Boolean)
     mixed_team = Column(Boolean)
 
@@ -87,6 +90,7 @@ class PartnershipProject(Base):
     partnership_type = Column(Enum("Industrial", "Governmental"))
     partner = Column(String(255))
     role = Column(String(255))
+    roleComment = Column(String(255))
     acquired_funding = Column(Numeric(12,2))
 
 class Publication(Base):
@@ -111,7 +115,7 @@ class PhDStudent(Base):
         String(20),
         ForeignKey("submissions.submission_id", ondelete="CASCADE")
     )
-    graduation_date = Column(Date)
+    graduation_year = Column(Integer)
     student_name = Column(String(255))
     thesis_title = Column(String(500))
     career_pursued = Column(Enum("Industry", "Academic"))

@@ -31,6 +31,7 @@ class EventSchema(BaseModel):
     event_type: Optional[str] = None
     location: Optional[str] = None
     role: Optional[str] = None
+    roleComment: Optional[str] = None
 
 
 class GrantProjectSchema(BaseModel):
@@ -38,8 +39,10 @@ class GrantProjectSchema(BaseModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     funder: Optional[str] = None
+    funderComment: Optional[str] = None
     funding_programme: Optional[str] = None
-    role = Optional[str] = None
+    role: Optional[str] = None
+    roleComment: Optional[str] = None
     mixed_gender: Optional[bool] = False
     mixed_team: Optional[bool] = False
 
@@ -49,7 +52,8 @@ class PartnershipProjectSchema(BaseModel):
     start_date: Optional[date] = None
     partnership_type: Optional[str] = None
     partner: Optional[str] = None
-    role = Optional[str] = None
+    role: Optional[str] = None
+    roleComment: Optional[str] = None
     acquired_funding: Optional[float] = None
 
 
@@ -62,7 +66,7 @@ class PublicationSchema(BaseModel):
 
 
 class PhDStudentSchema(BaseModel):
-    graduation_date: Optional[date] = None
+    graduation_year: Optional[int] = None
     student_name: Optional[str] = None
     thesis_title: Optional[str] = None
     career_pursued: Optional[str] = None

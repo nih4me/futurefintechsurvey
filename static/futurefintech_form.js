@@ -225,6 +225,8 @@ const surveyJson = {
         {
           "type": "boolean",
           "name": "has_events",
+          "isRequired": true,
+          "defaultValue": false,
           "title": "Have you participated in or organised events related to FutureFinTech or the FinTech research area?"
         },
         {
@@ -290,6 +292,8 @@ const surveyJson = {
         {
           "type": "boolean",
           "name": "has_new_fundings",
+          "isRequired": true,
+          "defaultValue": false,
           "title": "Have you acquired or significantly contributed to grants or projects related to FutureFinTech or the FinTech research area?"
         },
         {
@@ -347,6 +351,8 @@ const surveyJson = {
         {
           "type": "boolean",
           "name": "has_partnerships",
+          "isRequired": true,
+          "defaultValue": false,
           "title": "Have you acquired or significantly contributed to industrial partnerships and/or collaborative projects with public bodies in the FinTech area?"
         },
         {
@@ -422,6 +428,8 @@ const surveyJson = {
         {
           "type": "boolean",
           "name": "has_publications",
+          "isRequired": true,
+          "defaultValue": false,
           "title": "Have you published papers eligible under the FutureFinTech Incentive & Reward Scheme (e.g. Scopus Top 10% journals, top conference proceedings, FT50 journal publications, peer-reviewed law publications)?"
         },
         {
@@ -455,6 +463,8 @@ const surveyJson = {
         {
           "type": "boolean",
           "name": "has_phd_students",
+          "isRequired": true,
+          "defaultValue": false,
           "title": "Do you supervise or have you supervised PhD students related to FutureFinTech or the FinTech research area?"
         },
         {
@@ -471,13 +481,6 @@ const surveyJson = {
           "templateElements": [
             {
               "type": "text",
-              "name": "graduation_date",
-              "title": "Graduation date",
-              "dateFormat": "yyyy-mm-dd",
-              "inputType": "date"
-            },
-            {
-              "type": "text",
               "name": "student_name",
               "title": "Student name"
             },
@@ -485,6 +488,23 @@ const surveyJson = {
               "type": "text",
               "name": "thesis_title",
               "title": "Thesis title"
+            },
+            {
+              "type": "text",
+              "name": "graduation_year",
+              "title": "Year of graduation",
+              "inputType": "number",
+              "min": 1900,
+              "max": 2100,
+              "placeholder": "e.g. 2023",
+              "validators": [
+                {
+                  "type": "numeric",
+                  "minValue": 1900,
+                  "maxValue": 2100,
+                  "text": "Please enter a valid year"
+                }
+              ]
             },
             {
               "type": "dropdown",
@@ -516,6 +536,8 @@ const surveyJson = {
         {
           "type": "boolean",
           "name": "has_awards",
+          "isRequired": true,
+          "defaultValue": false,
           "title": "Have you received any awards or distinctions related to FutureFinTech or the FinTech research area?"
         },
         {
@@ -568,6 +590,8 @@ const surveyJson = {
         {
           "type": "boolean",
           "name": "has_press",
+          "isRequired": true,
+          "defaultValue": false,
           "title": "Do you have any press or media appearances related to FutureFinTech or the FinTech area to report?"
         },
         {
@@ -730,6 +754,40 @@ function flattenContributor(data) {
   return flat;
 }
 
+function mapSurveyToDb(value) {
+  if (Array.isArray(value)) {
+    return value.map(mapSurveyToDb);
+  }
+  if (value !== null && typeof value === "object") {
+    const result = {};
+    Object.entries(value).forEach(([key, val]) => {
+      const newKey = key.endsWith("-Comment")
+        ? key.replace("-Comment", "Comment")
+        : key;
+      result[newKey] = mapSurveyToDb(val);
+    });
+    return result;
+  }
+  return value;
+}
+
+function mapDbToSurvey(value) {
+  if (Array.isArray(value)) {
+    return value.map(mapDbToSurvey);
+  }
+  if (value !== null && typeof value === "object") {
+    const result = {};
+    Object.entries(value).forEach(([key, val]) => {
+      const newKey = key.endsWith("Comment")
+        ? key.replace("Comment", "-Comment")
+        : key;
+      result[newKey] = mapDbToSurvey(val);
+    });
+    return result;
+  }
+  return value;
+}
+
 async function apiRequest(url, method, data = null) {
   const options = {
     method,
@@ -776,7 +834,7 @@ function renderTopNav() {
 async function loadSubmission(submissionId, reload = true) {
   try {
     const data = await apiRequest(`${API_BASE}/${submissionId}`, "GET");
-    survey.data = flattenContributor(data);
+    survey.data = flattenContributor(mapDbToSurvey(data));
     document.getElementById("submissionIdInput").value = submissionId;
     setSubmissionIdInUrl(submissionId);
   } catch (err) {
@@ -804,7 +862,7 @@ async function saveDraft(survey) {
         ? `${API_BASE}/${submissionId}?status=draft`
         : `${API_BASE}?status=draft`,
       isUpdate ? "PUT" : "POST",
-      nestContributor(survey.data)
+      nestContributor(mapSurveyToDb(survey.data))
     );
 
     if (!isUpdate && result.submission_id) {
@@ -819,7 +877,7 @@ async function saveDraft(survey) {
     document.getElementById("submissionIdInput").value = submissionId;
 
   } catch (err) {
-    survey.notify("Unable to save draft. Ensure the all personal information of contributor are filled.", "error");
+    survey.notify("Unable to save draft. An error occured.", "error");
     console.error(err);
   }
 }
@@ -832,7 +890,7 @@ async function saveSubmission(sender) {
     const result = await apiRequest(
       isUpdate ? `${API_BASE}/${submissionId}` : API_BASE,
       isUpdate ? "PUT" : "POST",
-      nestContributor(sender.data)
+      nestContributor(mapSurveyToDb(sender.data))
     );
 
     if (!isUpdate) {

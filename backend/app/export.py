@@ -104,7 +104,7 @@ def export_submissions(db: Session = Depends(get_db)):
     write_table_sheet(
         wb,
         "Events",
-        ["submission_id", "event_date", "event_name", "event_type", "location", "role"],
+        ["submission_id", "event_date", "event_name", "event_type", "location", "role", "roleComment"],
         get_rows(db.query(Event))
     )
 
@@ -118,7 +118,7 @@ def export_submissions(db: Session = Depends(get_db)):
     write_table_sheet(
         wb,
         "Grants",
-        ["submission_id", "project_name", "funder", "role", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
+        ["submission_id", "project_name", "funder", "funderComment", "role", "roleComment", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
         get_rows(db.query(GrantProject))
     )
 
@@ -132,7 +132,7 @@ def export_submissions(db: Session = Depends(get_db)):
     write_table_sheet(
         wb,
         "PhD Students",
-        ["submission_id", "graduation_date", "student_name", "thesis_title",
+        ["submission_id", "graduation_year", "student_name", "thesis_title",
          "career_pursued", "current_work_location"],
         get_rows(db.query(PhDStudent))
     )
@@ -149,7 +149,7 @@ def export_submissions(db: Session = Depends(get_db)):
         wb,
         "Partnerships",
         ["submission_id", "project_name", "start_date",
-         "partnership_type", "role", "partner", "acquired_funding"],
+         "partnership_type", "role", "roleComment", "partner", "acquired_funding"],
         get_rows(db.query(PartnershipProject))
     )
 
