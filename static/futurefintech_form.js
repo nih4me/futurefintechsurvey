@@ -368,11 +368,12 @@ const surveyJson = {
           `
         },
         {
-          type: "checkbox",
+          type: "radiogroup",
           name: "consent",
           title: "Consent",
           isRequired: true,
           choices: ["I have read and understood the data protection disclaimer"],
+          renderAs: "checkbox",
           validators: [
             {
               type: "expression",
@@ -691,8 +692,9 @@ const surveyJson = {
           "title": "Have you published papers eligible under the FutureFinTech Incentive & Reward Scheme (e.g. Scopus Top 10% journals, top conference proceedings, FT50 journal publications, peer-reviewed law publications)?"
         },
         {
-          "type": "checkbox",
+          "type": "radiogroup",
           "name": "all_publications_on_orbilu",
+          renderAs: "checkbox",
           "title": "Publications",
           "visibleIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
           "requiredIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
@@ -981,6 +983,7 @@ survey.applyTheme({
 // Custom data
 // ----------------------------------
 survey.setVariable("only_checkbox_for_publications", only_checkbox_for_publications);
+survey.completeText = "Submit";
 
 // ----------------------------------
 // Helpers
@@ -998,7 +1001,7 @@ function setSubmissionIdInUrl(submissionId) {
 }
 
 // Fields to move under "contributor"
-const contributorFields = ["email", "name", "surname", "contributor_type", "affiliated_fellow_email", "discipline", "has_awards", "has_phd_students", "has_press", "has_partnerships", "has_events", "has_new_fundings", "has_publications"];
+const contributorFields = ["consent", "email", "name", "surname", "contributor_type", "affiliated_fellow_email", "discipline", "has_awards", "has_phd_students", "has_press", "has_partnerships", "has_events", "has_new_fundings", "has_publications", "all_publications_on_orbilu"];
 
 /**
  * Converts flat form data into nested form with "contributor"
