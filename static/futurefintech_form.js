@@ -253,6 +253,7 @@ const COUNTRIES = [
 ]
 
 const year = "2026";
+const only_checkbox_for_publications = true;
 const surveyJson = {
   "showProgressBar": "true",
   "progressBarLocation": "aboveHeader",
@@ -277,27 +278,19 @@ const surveyJson = {
             </div>
             <div style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
               <p>
-                The objective of the <strong>FutureFinTech Incentive & Reward Scheme</strong> is to recognise 
-                and encourage contributions that strengthen the FutureFinTech community, increase its impact, 
-                and support the development of new activities.
+                The objective of the FutureFinTech Incentive & Reward Scheme is to recognise and encourage contributions that strengthen the FutureFinTech community, increase its impact, and support the development of new activities.
               </p>
 
               <p>
-                This form allows Fellows and Affiliated Researchers to declare their achievements for 
-                consideration under the scheme and supports reporting obligations towards funders 
-                and institutional stakeholders.
+                This form serves both as an application for new FutureFinTech Fellows and Affiliated PIs and as a renewal mechanism for existing participants. It also allows Fellows and Affiliated Researchers to declare their achievements for consideration under the scheme and supports reporting obligations towards funders and institutional stakeholders.
               </p>
 
               <p>
-                The form is cumulative and can be completed progressively over the lifetime of the project 
-                as new achievements occur. Cut-off dates for the annual assessment of incentives and 
-                rewards will be communicated separately.
+                The form is cumulative and can be completed progressively over the lifetime of the project as new achievements occur. Cut-off dates for the annual assessment of incentives and rewards will be communicated separately.
               </p>
 
               <p>
-                To ensure fair and transparent assessment, only activities recorded in this form will be 
-                taken into account, and Fellows and Affiliated Researchers are responsible for the accuracy 
-                and completeness of the information provided.
+                To ensure fair and transparent assessment, only activities recorded in this form will be taken into account, and Fellows and Affiliated Researchers are responsible for the accuracy and completeness of the information provided.
               </p>
             </div>
           `
@@ -698,14 +691,29 @@ const surveyJson = {
           "title": "Have you published papers eligible under the FutureFinTech Incentive & Reward Scheme (e.g. Scopus Top 10% journals, top conference proceedings, FT50 journal publications, peer-reviewed law publications)?"
         },
         {
+          "type": "checkbox",
+          "name": "all_publications_on_orbilu",
+          "title": "Publications",
+          "visibleIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
+          "requiredIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
+          choices: ["I confirm that all my publications related to FutureFinTech have been declared in accordance with the applicable guidelines (NCER22/IS/16570468/NCER-FT), uploaded to ORBilu, and tagged with the Research Centre “NCER-FT – FinTech National Centre of Excellence in Research”"],
+          validators: [
+            {
+              type: "expression",
+              expression: "{all_publications_on_orbilu} contains 'I confirm that all my publications related to FutureFinTech have been declared in accordance with the applicable guidelines (NCER22/IS/16570468/NCER-FT), uploaded to ORBilu, and tagged with the Research Centre “NCER-FT – FinTech National Centre of Excellence in Research”'",
+              text: "You must agree to continue."
+            }
+          ]
+        },
+        {
           "type": "paneldynamic",
           "confirmDelete": true,
           "displayMode": "tab",
           "templateTabTitle": "Publication {panelIndex}",
           "name": "publications",
           "title": "Publications",
-          "visibleIf": "{has_publications} = true",
-          "requiredIf": "{has_publications} = true",
+          "visibleIf": "{has_publications} = true and {only_checkbox_for_publications} = false",
+          "requiredIf": "{has_publications} = true and {only_checkbox_for_publications} = false",
           "panelAddText": "Add Publication",
           "templateElements": [
             { "type": "text", "name": "publication_date", "title": "Publication Date", "inputType": "date" },
@@ -968,6 +976,11 @@ survey.applyTheme({
     "--primary": "#049DD9",
   },
 });
+
+// ----------------------------------
+// Custom data
+// ----------------------------------
+survey.setVariable("only_checkbox_for_publications", only_checkbox_for_publications);
 
 // ----------------------------------
 // Helpers

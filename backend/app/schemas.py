@@ -7,6 +7,7 @@ from datetime import date
 # ----------------------------
 
 class ContributorInfoSchema(BaseModel):
+    consent: str
     email: EmailStr
     name: str
     surname: str
@@ -16,6 +17,7 @@ class ContributorInfoSchema(BaseModel):
     has_events: Optional[bool] = False
     has_new_fundings: Optional[bool] = False
     has_publications: Optional[bool] = False
+    all_publications_on_orbilu: Optional[str]
     has_awards: Optional[bool] = False
     has_partnerships: Optional[bool] = False
     has_phd_students: Optional[bool] = False

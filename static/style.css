@@ -157,6 +157,12 @@ div[id^="sp_"] {
   margin-top: 0.5rem;
 }
 
+footer {
+  padding: 10px;
+  text-align: center;
+  font-size: small;
+}
+
 /* Mobile layout */
 @media (max-width: 640px) {
   #topNav {

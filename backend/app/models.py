@@ -18,6 +18,7 @@ class ContributorInfo(Base):
         ForeignKey("submissions.submission_id", ondelete="CASCADE"),
         primary_key=True
     )
+    consent = Column(String(255))
     email = Column(String(255))
     name = Column(String(100))
     surname = Column(String(100))
@@ -27,6 +28,7 @@ class ContributorInfo(Base):
     has_events = Column(Boolean)
     has_new_fundings = Column(Boolean)
     has_publications = Column(Boolean)
+    all_publications_on_orbilu = Column(String(255))
     has_awards = Column(Boolean)
     has_partnerships = Column(Boolean)
     has_phd_students = Column(Boolean)
