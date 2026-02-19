@@ -33,7 +33,7 @@ def write_table_sheet(wb, title, columns, rows):
 
     autosize_columns(ws)
 
-def write_contributors_sheet(wb, db: Session):
+def write_contributors_sheet(wb, db: Session, submission_id = None):
     ws = wb.create_sheet(title="Contributors")
 
     headers = [
@@ -60,11 +60,16 @@ def write_contributors_sheet(wb, db: Session):
 
     ws.append(headers)
 
-    rows = (
+    query = (
         db.query(Submission, ContributorInfo)
-        .join(ContributorInfo, ContributorInfo.submission_id == Submission.submission_id)
-        .all()
+        .join(
+            ContributorInfo,
+            ContributorInfo.submission_id == Submission.submission_id
+        )
     )
+    if submission_id is not None:
+        query = query.filter(Submission.submission_id == submission_id)
+    rows = query.all()
 
     for app, contributor in rows:
         ws.append([
@@ -91,46 +96,47 @@ def write_contributors_sheet(wb, db: Session):
 
     autosize_columns(ws)
 
-@router.get("/submissions.xlsx")
-def export_submissions(db: Session = Depends(get_db)):
+@router.get("/")
+def export_submissions(submission_id: Optional[str] = None, db: Session = Depends(get_db)):
     wb = Workbook()
     wb.remove(wb.active)  # remove default empty sheet
 
     # Contributors (custom)
-    write_contributors_sheet(wb, db)
+    write_contributors_sheet(wb, db, submission_id)
 
-    def get_rows(query, submission_id: Optional[int] = None):
+    def get_rows(query, submission_id: Optional[str] = None):
         if submission_id is not None:
-            query = query.filter_by(submission_id=submission_id)
-        return query.all()
+           query = query.filter_by(submission_id=submission_id)
+        rows = query.all()
+        return rows
 
     # Generic sheets
     write_table_sheet(
         wb,
         "Events",
         ["submission_id", "event_date", "event_name", "event_type", "location", "role", "roleComment"],
-        get_rows(db.query(Event))
+        get_rows(db.query(Event), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Publications",
         ["submission_id", "publication_name", "publication_date", "orbilu_link", "mixed_gender", "mixed_team"],
-        get_rows(db.query(Publication))
+        get_rows(db.query(Publication), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Grants",
         ["submission_id", "project_name", "funder", "funderComment", "role", "roleComment", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
-        get_rows(db.query(GrantProject))
+        get_rows(db.query(GrantProject), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Awards",
         ["submission_id", "award_date", "award_title", "award_subject", "award_issuer"],
-        get_rows(db.query(Award))
+        get_rows(db.query(Award), submission_id)
     )
 
     write_table_sheet(
@@ -138,7 +144,7 @@ def export_submissions(db: Session = Depends(get_db)):
         "PhD Students",
         ["submission_id", "graduation_year", "student_name", "thesis_title",
          "career_pursued", "current_work_location"],
-        get_rows(db.query(PhDStudent))
+        get_rows(db.query(PhDStudent), submission_id)
     )
 
     write_table_sheet(
@@ -146,7 +152,7 @@ def export_submissions(db: Session = Depends(get_db)):
         "Press",
         ["submission_id", "appearance_date", "press_name", "press_type",
          "appearance_type", "subject"],
-        get_rows(db.query(PressAppearance))
+        get_rows(db.query(PressAppearance), submission_id)
     )
 
     write_table_sheet(
@@ -154,7 +160,7 @@ def export_submissions(db: Session = Depends(get_db)):
         "Partnerships",
         ["submission_id", "project_name", "start_date",
          "partnership_type", "role", "roleComment", "partner", "acquired_funding"],
-        get_rows(db.query(PartnershipProject))
+        get_rows(db.query(PartnershipProject), submission_id)
     )
 
     # Stream file

@@ -1,5 +1,6 @@
 // const SURVEY_ID = 1;
-const API_BASE = "http://localhost:8001/api/submissions";
+const API_BASE = "http://localhost:8001";
+const SUBMISSION_ENDPOINT =  API_BASE + '/api/submissions'
 const COUNTRIES = [
 	"Afghanistan",
 	"Åland Islands",
@@ -1112,6 +1113,19 @@ function renderTopNav() {
       survey.notify("Invalid submission ID.", "error");
     }
   };
+
+  document.getElementById("downloadBtn").onclick = async () => {
+    const id = document.getElementById("submissionIdInput").value.trim();
+    if (!id) {
+      survey.notify("Provide an submission ID.", "error");
+      return;
+    }
+    try {
+      await downloadSubmission(id);
+    } catch {
+      survey.notify("Invalid submission ID.", "error");
+    }
+  };
 }
 
 // ----------------------------------
@@ -1120,10 +1134,11 @@ function renderTopNav() {
 
 async function loadSubmission(submissionId, reload = true) {
   try {
-    const data = await apiRequest(`${API_BASE}/${submissionId}`, "GET");
+    const data = await apiRequest(`${SUBMISSION_ENDPOINT}/${submissionId}`, "GET");
     survey.data = flattenContributor(mapDbToSurvey(data));
     document.getElementById("submissionIdInput").value = submissionId;
     setSubmissionIdInUrl(submissionId);
+    survey.notify("Your contribution has been successfully loaded and is now available for review. You can make changes and submit it when ready.", "success");
   } catch (err) {
     console.error("Failed to load submission", err);
     survey.notify("Unable to load submission #" + submissionId, "error");
@@ -1131,6 +1146,40 @@ async function loadSubmission(submissionId, reload = true) {
       // Reload the page but remove any query parameters
       window.location.href = window.location.origin + window.location.pathname;
     }
+  }
+}
+
+// ----------------------------------
+// Download submission
+// ----------------------------------
+
+async function downloadSubmission(submissionId) {
+  try {
+    const response = await fetch(`${API_BASE}/export?app=${submissionId}`, {method: "GET"});
+    if (!response.ok) {
+      throw new Error("Download failed");
+    }
+    const contentDisposition = response.headers.get("content-disposition");
+    let filename = "FutureFintech_" + submissionId + ".xlsx";
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="?(.+)"?/);
+      if (match?.[1]) {
+        filename = match[1];
+      }
+    }
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+    survey.notify("Download started.", "success");
+  } catch (err) {
+    console.error("Failed to download your submission data", err);
+    survey.notify("Failed to download your submission data #" + submissionId, "error");
   }
 }
 
@@ -1146,8 +1195,8 @@ async function saveDraft(survey) {
     survey.currentPage.validate();
     const result = await apiRequest(
       isUpdate
-        ? `${API_BASE}/${submissionId}?status=draft`
-        : `${API_BASE}?status=draft`,
+        ? `${SUBMISSION_ENDPOINT}/${submissionId}?status=draft`
+        : `${SUBMISSION_ENDPOINT}?status=draft`,
       isUpdate ? "PUT" : "POST",
       nestContributor(mapSurveyToDb(survey.data))
     );
@@ -1175,7 +1224,7 @@ async function saveSubmission(sender) {
 
   try {
     const result = await apiRequest(
-      isUpdate ? `${API_BASE}/${submissionId}` : API_BASE,
+      isUpdate ? `${SUBMISSION_ENDPOINT}/${submissionId}` : SUBMISSION_ENDPOINT,
       isUpdate ? "PUT" : "POST",
       nestContributor(mapSurveyToDb(sender.data))
     );
