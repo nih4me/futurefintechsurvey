@@ -696,6 +696,7 @@ const surveyJson = {
           "type": "radiogroup",
           "name": "all_publications_on_orbilu",
           renderAs: "checkbox",
+          "defaultValue": "No answer",
           "title": "Publications",
           "visibleIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
           "requiredIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
@@ -1155,7 +1156,7 @@ async function loadSubmission(submissionId, reload = true) {
 
 async function downloadSubmission(submissionId) {
   try {
-    const response = await fetch(`${API_BASE}/export?app=${submissionId}`, { method: "GET" });
+    const response = await fetch(`${API_BASE}/export?submission_id=${submissionId}`, { method: "GET" });
     if (!response.ok) {
       throw new Error("Download failed");
     }
