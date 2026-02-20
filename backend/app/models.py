@@ -18,19 +18,21 @@ class ContributorInfo(Base):
         ForeignKey("submissions.submission_id", ondelete="CASCADE"),
         primary_key=True
     )
+    consent = Column(String(255))
     email = Column(String(255))
     name = Column(String(100))
     surname = Column(String(100))
-    contributor_type = Column(Enum("Fellow", "Affiliated Researcher"))
+    contributor_type = Column(Enum("Fellow", "Affiliated Researcher", "other"))
     affiliated_fellow_email = Column(String(255))
-    discipline = Column(Enum("Finance and Economics", "Technology", "Law"))
-    events_na = Column(Boolean)
-    grants_na = Column(Boolean)
-    publications_na = Column(Boolean)
-    awards_na = Column(Boolean)
-    partnerships_na = Column(Boolean)
-    phd_students_na = Column(Boolean)
-    press_na = Column(Boolean)
+    discipline = Column(Enum("Finance and Economics", "Technology", "Law", "other"))
+    has_events = Column(Boolean)
+    has_new_fundings = Column(Boolean)
+    has_publications = Column(Boolean)
+    all_publications_on_orbilu = Column(String(255))
+    has_awards = Column(Boolean)
+    has_partnerships = Column(Boolean)
+    has_phd_students = Column(Boolean)
+    has_press = Column(Boolean)
     
 
 class Narrative(Base):
@@ -56,6 +58,7 @@ class Event(Base):
     event_type = Column(String(100))
     location = Column(String(150))
     role = Column(String(150))
+    roleComment = Column(String(150))
 
 class GrantProject(Base):
     __tablename__ = "grants_projects"
@@ -68,8 +71,11 @@ class GrantProject(Base):
     project_name = Column(String(255))
     start_date = Column(Date)
     end_date = Column(Date)
-    funder = Column(Enum("EU", "IAS", "FNR", "Other"))
+    funder = Column(Enum("EU", "IAS", "FNR", "other"))
+    funderComment = Column(String(255))
     funding_programme = Column(String(255))
+    role = Column(String(255))
+    roleComment = Column(String(255))
     mixed_gender = Column(Boolean)
     mixed_team = Column(Boolean)
 
@@ -83,8 +89,10 @@ class PartnershipProject(Base):
     )
     project_name = Column(String(255))
     start_date = Column(Date)
-    partnership_type = Column(Enum("Industrial", "Governmental"))
+    partnership_type = Column(Enum("Industrial", "Governmental", "other"))
     partner = Column(String(255))
+    role = Column(String(255))
+    roleComment = Column(String(255))
     acquired_funding = Column(Numeric(12,2))
 
 class Publication(Base):
@@ -109,10 +117,10 @@ class PhDStudent(Base):
         String(20),
         ForeignKey("submissions.submission_id", ondelete="CASCADE")
     )
-    graduation_date = Column(Date)
+    graduation_year = Column(Integer)
     student_name = Column(String(255))
     thesis_title = Column(String(500))
-    career_pursued = Column(Enum("Industry", "Academic"))
+    career_pursued = Column(Enum("Industry", "Academic", "other"))
     current_work_location = Column(String(150))
 
 
@@ -139,7 +147,7 @@ class PressAppearance(Base):
     )
     appearance_date = Column(Date)
     press_name = Column(String(255))
-    press_type = Column(Enum("National", "International"))
+    press_type = Column(Enum("National", "International", "other"))
     appearance_type = Column(String(255))
     subject = Column(String(255))
 

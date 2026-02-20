@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="./style.css" type="text/css" rel="stylesheet">
     <link href="https://unpkg.com/survey-core/survey-core.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- <script type="text/javascript" src="https://unpkg.com/survey-core/themes/contrast-dark.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/survey-core/themes/contrast-light.min.js"></script>
@@ -18,11 +19,22 @@
 
 <body>
     <div id="topNav">
-        <input type="text" id="submissionIdInput" placeholder="e.g. FTF-2026-AB12CD" />
-        <button class="sd-btn small" id="resumeBtn">Resume</button>
-        <button class="sd-btn small" id="startNewBtn">New submission</button>
+        <div class="nav-left">
+            <img src="logo.jpg" alt="University logo" class="nav-logo" /> <em class="title">Fellows Survey Form</em>
+        </div>
+        <div class="nav-right">
+            <input type="text" id="submissionIdInput" placeholder="e.g. FTF-2026-AB12CD"/>
+            <span id="resumeBtn" title="Resume submission"><small>Resume</small> <i class="fa fa-square-check"></i></span>
+            <span id="downloadBtn" title="Export your data in Excel format"><small>Download</small><i class="fa fa-download"></i></span>
+            <span id="startNewBtn" title="New submission"><small>New</small> <i class="fa fa-circle-plus"></i></span>
+        </div>
     </div>
+
     <div id="surveyContainer"></div>
+
+    <footer>
+       <p> The National Centre of Excellence in Research (NCER) is an initiative of the Luxembourg National Research Fund (FNR)</p>
+    </footer>
 </body>
 
 </html>

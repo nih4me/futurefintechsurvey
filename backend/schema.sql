@@ -169,7 +169,7 @@ CREATE TABLE publications (
 CREATE TABLE phd_students (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   submission_id CHAR(20) NOT NULL,
-  graduation_date DATE,
+  graduation_year DATE,
   student_name VARCHAR(255),
   thesis_title VARCHAR(500),
   career_pursued ENUM('Industry','Academic'),

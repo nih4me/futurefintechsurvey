@@ -1,10 +1,390 @@
 // const SURVEY_ID = 1;
-const API_BASE = "http://ttodevthree.uni.lux:8080/api/submissions";
+const API_BASE = "http://ttodevthree.uni.lux:8080";
+const SUBMISSION_ENDPOINT = API_BASE + '/api/submissions'
+const COUNTRIES = [
+  "Afghanistan",
+  "Åland Islands",
+  "Albania",
+  "Algeria",
+  "American Samoa",
+  "Andorra",
+  "Angola",
+  "Anguilla",
+  "Antarctica",
+  "Antigua and Barbuda",
+  "Argentina",
+  "Armenia",
+  "Aruba",
+  "Australia",
+  "Austria",
+  "Azerbaijan",
+  "Bahamas",
+  "Bahrain",
+  "Bangladesh",
+  "Barbados",
+  "Belarus",
+  "Belgium",
+  "Belize",
+  "Benin",
+  "Bermuda",
+  "Bhutan",
+  "Bolivia, Plurinational State of",
+  "Bonaire, Sint Eustatius and Saba",
+  "Bosnia and Herzegovina",
+  "Botswana",
+  "Bouvet Island",
+  "Brazil",
+  "British Indian Ocean Territory",
+  "Brunei Darussalam",
+  "Bulgaria",
+  "Burkina Faso",
+  "Burundi",
+  "Cambodia",
+  "Cameroon",
+  "Canada",
+  "Cape Verde",
+  "Cayman Islands",
+  "Central African Republic",
+  "Chad",
+  "Chile",
+  "China",
+  "Christmas Island",
+  "Cocos (Keeling) Islands",
+  "Colombia",
+  "Comoros",
+  "Congo",
+  "Congo, the Democratic Republic of the",
+  "Cook Islands",
+  "Costa Rica",
+  "Côte d'Ivoire",
+  "Croatia",
+  "Cuba",
+  "Curaçao",
+  "Cyprus",
+  "Czech Republic",
+  "Denmark",
+  "Djibouti",
+  "Dominica",
+  "Dominican Republic",
+  "Ecuador",
+  "Egypt",
+  "El Salvador",
+  "Equatorial Guinea",
+  "Eritrea",
+  "Estonia",
+  "Ethiopia",
+  "Falkland Islands (Malvinas)",
+  "Faroe Islands",
+  "Fiji",
+  "Finland",
+  "France",
+  "French Guiana",
+  "French Polynesia",
+  "French Southern Territories",
+  "Gabon",
+  "Gambia",
+  "Georgia",
+  "Germany",
+  "Ghana",
+  "Gibraltar",
+  "Greece",
+  "Greenland",
+  "Grenada",
+  "Guadeloupe",
+  "Guam",
+  "Guatemala",
+  "Guernsey",
+  "Guinea",
+  "Guinea-Bissau",
+  "Guyana",
+  "Haiti",
+  "Heard Island and McDonald Islands",
+  "Holy See (Vatican City State)",
+  "Honduras",
+  "Hong Kong",
+  "Hungary",
+  "Iceland",
+  "India",
+  "Indonesia",
+  "Iran, Islamic Republic of",
+  "Iraq",
+  "Ireland",
+  "Isle of Man",
+  "Israel",
+  "Italy",
+  "Jamaica",
+  "Japan",
+  "Jersey",
+  "Jordan",
+  "Kazakhstan",
+  "Kenya",
+  "Kiribati",
+  "Korea, Democratic People's Republic of",
+  "Korea, Republic of",
+  "Kuwait",
+  "Kyrgyzstan",
+  "Lao People's Democratic Republic",
+  "Latvia",
+  "Lebanon",
+  "Lesotho",
+  "Liberia",
+  "Libya",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "Macao",
+  "Macedonia, the Former Yugoslav Republic of",
+  "Madagascar",
+  "Malawi",
+  "Malaysia",
+  "Maldives",
+  "Mali",
+  "Malta",
+  "Marshall Islands",
+  "Martinique",
+  "Mauritania",
+  "Mauritius",
+  "Mayotte",
+  "Mexico",
+  "Micronesia, Federated States of",
+  "Moldova, Republic of",
+  "Monaco",
+  "Mongolia",
+  "Montenegro",
+  "Montserrat",
+  "Morocco",
+  "Mozambique",
+  "Myanmar",
+  "Namibia",
+  "Nauru",
+  "Nepal",
+  "Netherlands",
+  "New Caledonia",
+  "New Zealand",
+  "Nicaragua",
+  "Niger",
+  "Nigeria",
+  "Niue",
+  "Norfolk Island",
+  "Northern Mariana Islands",
+  "Norway",
+  "Oman",
+  "Pakistan",
+  "Palau",
+  "Palestine, State of",
+  "Panama",
+  "Papua New Guinea",
+  "Paraguay",
+  "Peru",
+  "Philippines",
+  "Pitcairn",
+  "Poland",
+  "Portugal",
+  "Puerto Rico",
+  "Qatar",
+  "Réunion",
+  "Romania",
+  "Russian Federation",
+  "Rwanda",
+  "Saint Barthélemy",
+  "Saint Helena, Ascension and Tristan da Cunha",
+  "Saint Kitts and Nevis",
+  "Saint Lucia",
+  "Saint Martin (French part)",
+  "Saint Pierre and Miquelon",
+  "Saint Vincent and the Grenadines",
+  "Samoa",
+  "San Marino",
+  "Sao Tome and Principe",
+  "Saudi Arabia",
+  "Senegal",
+  "Serbia",
+  "Seychelles",
+  "Sierra Leone",
+  "Singapore",
+  "Sint Maarten (Dutch part)",
+  "Slovakia",
+  "Slovenia",
+  "Solomon Islands",
+  "Somalia",
+  "South Africa",
+  "South Georgia and the South Sandwich Islands",
+  "South Sudan",
+  "Spain",
+  "Sri Lanka",
+  "Sudan",
+  "Suriname",
+  "Svalbard and Jan Mayen",
+  "Eswatini",
+  "Sweden",
+  "Switzerland",
+  "Syrian Arab Republic",
+  "Taiwan, Province of China",
+  "Tajikistan",
+  "Tanzania, United Republic of",
+  "Thailand",
+  "Timor-Leste",
+  "Togo",
+  "Tokelau",
+  "Tonga",
+  "Trinidad and Tobago",
+  "Tunisia",
+  "Turkey",
+  "Turkmenistan",
+  "Turks and Caicos Islands",
+  "Tuvalu",
+  "Uganda",
+  "Ukraine",
+  "United Arab Emirates",
+  "United Kingdom",
+  "United States",
+  "United States Minor Outlying Islands",
+  "Uruguay",
+  "Uzbekistan",
+  "Vanuatu",
+  "Venezuela, Bolivarian Republic of",
+  "Viet Nam",
+  "Virgin Islands, British",
+  "Virgin Islands, U.S.",
+  "Wallis and Futuna",
+  "Western Sahara",
+  "Yemen",
+  "Zambia",
+  "Zimbabwe"
+]
 
+const year = "2026";
+const only_checkbox_for_publications = true;
 const surveyJson = {
-  "title": "2026 FutureFintech Fellows Survey Form",
+  "showProgressBar": "true",
+  "progressBarLocation": "aboveHeader",
+  // "title": "Fellows Survey Form " + year,
   "showQuestionNumbers": "on",
   "pages": [
+    /* =========================
+    Introduction
+    ========================= */
+    {
+      name: "introduction",
+      title: "FutureFinTech Incentive & Reward Scheme",
+      elements: [
+        {
+          type: "html",
+          name: "introText",
+          html: `
+            <div id="parners-logo" style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
+              <img src="./fnr.jpg" alt="Logo FNR" />
+              <img src="./lux-gov.jpg" alt="Logo Government of Luxembourg" />
+              <img src="./uni.jpg" alt="Logo University of Luxembourg" />
+            </div>
+            <div style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
+              <p>
+                The objective of the FutureFinTech Incentive & Reward Scheme is to recognise and encourage contributions that strengthen the FutureFinTech community, increase its impact, and support the development of new activities.
+              </p>
+
+              <p>
+                This form serves both as an application for new FutureFinTech Fellows and Affiliated PIs and as a renewal mechanism for existing participants. It also allows Fellows and Affiliated Researchers to declare their achievements for consideration under the scheme and supports reporting obligations towards funders and institutional stakeholders.
+              </p>
+
+              <p>
+                The form is cumulative and can be completed progressively over the lifetime of the project as new achievements occur. Cut-off dates for the annual assessment of incentives and rewards will be communicated separately.
+              </p>
+
+              <p>
+                To ensure fair and transparent assessment, only activities recorded in this form will be taken into account, and Fellows and Affiliated Researchers are responsible for the accuracy and completeness of the information provided.
+              </p>
+            </div>
+          `
+        }
+      ]
+    },
+    /* =========================
+    Disclaimer
+    ========================= */
+    {
+      name: "disclaimer",
+      title: "Data Protection Disclaimer",
+      elements: [
+        {
+          type: "html",
+          name: "disclaimerText",
+          html: `
+            <div style="text-align:justify;">
+              <p><strong>DISCLAIMER</strong></p>
+              <p>
+                The University of Luxembourg (2 place de l’Université, L-4365 Esch-sur-Alzette)
+                collects your personal data in the context of the FutureFinTech fellowship scheme
+                and the related key performance indicator (KPI) reporting obligations to the
+                Luxembourg National Research Fund (“Fonds National de la Recherche” or “FNR”)
+                for the FutureFinTech project (the “Project”) in which you participate(d).
+              </p>
+              <p>
+                In particular, the University is required to report to FNR on scientific publications,
+                research projects, events attended or organised, and other relevant activities in the
+                research field of FutureFinTech.
+              </p>
+
+              <p>
+                For this fellowship scheme and KPI reporting, the University may collect the following
+                personal data from you: first and last name, professional email address, job title/position,
+                department, events organised and/or attended, publications (e.g. title and date of publication),
+                projects awarded and implemented, PhD candidates supervised (name and title of thesis),
+                and titles of research projects conducted in or related to the FutureFinTech research domain.
+              </p>
+
+              <p>
+                Your personal data will be used exclusively for reporting to the FNR in fulfilment of
+                contractual obligations and for the implementation of the FutureFinTech Fellowship
+                Incentive and Reward Scheme within the Project. The data collected will only be accessible
+                to the team of the University of Luxembourg involved in FNR reporting and to the FNR itself,
+                and will be stored by the University and deleted 5 years after the end of the project.
+              </p>
+
+              <p>
+                The legal basis for the processing of your personal data is the legitimate interest of
+                the University of Luxembourg in complying with the reporting requirements imposed by
+                the FNR for the Project (Article 6(1)(f) of the General Data Protection Regulation, “GDPR”).
+              </p>
+
+              <p>
+                You have the right to object to this processing of your data at
+                <a href="mailto:futurefintech@uni.lu">futurefintech@uni.lu</a>.
+                Please note that exercising this right may result in your contribution to the Project
+                not being reported to the FNR and not being taken into account for the FutureFinTech
+                Fellowship Incentive and Reward Scheme.
+              </p>
+
+              <p>
+                You also have the right to access your personal data and to request rectification of
+                inaccurate or incomplete information, and, where applicable, to request the deletion
+                of your data, in accordance with the GDPR. Information on how to exercise these rights
+                is available on the webpage “Your rights – University of Luxembourg”.
+              </p>
+
+              <p>
+                Any questions may be addressed to the University’s Data Protection Officer (DPO)
+                via the DPO4U ticketing system in ServiceNow.
+              </p>
+            </div>
+          `
+        },
+        {
+          type: "radiogroup",
+          name: "consent",
+          title: "Consent",
+          isRequired: true,
+          choices: ["I have read and understood the data protection disclaimer"],
+          renderAs: "checkbox",
+          validators: [
+            {
+              type: "expression",
+              expression: "{consent} contains 'I have read and understood the data protection disclaimer'",
+              text: "You must agree to continue."
+            }
+          ]
+        }
+      ]
+    },
     /* =========================
     A. Contributor information
     ========================= */
@@ -81,8 +461,7 @@ const surveyJson = {
           "type": "comment",
           "name": "narrative",
           "title": "Provide a short narrative (max 250 words) highlighting your contributions and impact in FinTech.",
-          "isRequired": true,
-          "maxLength": 250
+          "maxLength": 250,
         }
       ]
     },
@@ -96,14 +475,20 @@ const surveyJson = {
       "elements": [
         {
           "type": "boolean",
-          "name": "events_na",
-          "title": "Not Applicable"
+          "name": "has_events",
+          "isRequired": true,
+          "defaultValue": false,
+          "title": "Have you participated in or organised events related to FutureFinTech or the FinTech research area?"
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Event {panelIndex}",
           "name": "events",
           "title": "Events",
-          "visibleIf": "{events_na} = false",
+          "visibleIf": "{has_events} = true",
+          "requiredIf": "{has_events} = true",
           "title": "FinTech-related Events",
           "panelAddText": "Add Event",
           "panelRemoveText": "Remove",
@@ -115,21 +500,29 @@ const surveyJson = {
               "name": "event_type",
               "title": "Event Type",
               "choices": [
-                "FutureFinTech Lecture",
-                "Working Papers",
-                "Conference",
+                "FutureFinTech lectures",
+                "FutureFinTech x industry (Talks, roundtables, or workshops connecting research and industry)",
+                "FutureFinTech forums (Interdisciplinary forums and thematic workshops)",
+                "Transversal themes (Workshops or sessions with focus on Trainign and capacity building / Gender/Open science and research transparency)",
+                "Working papers",
                 "FutureFinTech Federated Conference (F3C)",
-                "FutureFinTech Annual Event",
-                "Other"
+                "Conference"
               ]
             },
-            { "type": "text", "name": "location", "title": "Location" },
+            {
+              "type": "dropdown",
+              "name": "location",
+              "title": "Location",
+              "choices": COUNTRIES,
+              "searchEnable": true
+            },
             {
               "type": "dropdown",
               "name": "role",
               "title": "Role",
               "choices": [
                 "Attendee",
+                "Accepted Paper Presenter",
                 "Presenter, Moderator or Session Chair",
                 "Speaker",
                 "Keynote Speaker",
@@ -156,14 +549,20 @@ const surveyJson = {
       "elements": [
         {
           "type": "boolean",
-          "name": "grants_na",
-          "title": "Not applicable"
+          "name": "has_new_fundings",
+          "isRequired": true,
+          "defaultValue": false,
+          "title": "Have you acquired or significantly contributed to grants or projects related to FutureFinTech or the FinTech research area?"
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Grant {panelIndex}",
           "name": "grants",
           "title": "Grants",
-          "visibleIf": "{grants_na} = false",
+          "visibleIf": "{has_new_fundings} = true",
+          "requiredIf": "{has_new_fundings} = true",
           "panelAddText": "Add Project",
           "templateElements": [
             { "type": "text", "name": "project_name", "title": "Project Name" },
@@ -173,9 +572,26 @@ const surveyJson = {
               "type": "dropdown",
               "name": "funder",
               "title": "Funder",
-              "choices": ["EU", "IAS", "FNR", "Other"]
+              "choices": ["EU", "IAS", "FNR"],
+              "showOtherItem": true,
+              "otherText": "Other",
+              "otherPlaceholder": "Please specify"
             },
             { "type": "text", "name": "funding_programme", "title": "Funding Programme" },
+            {
+              "type": "dropdown",
+              "name": "role",
+              "title": " Your role in the project",
+              "choices": [
+                "Principle Investigator",
+                "Co-Principal Investigator",
+                "Contributor",
+                "WP leader"
+              ],
+              "showOtherItem": true,
+              "otherText": "Other",
+              "otherPlaceholder": "Please specify"
+            },
             { "type": "boolean", "name": "mixed_gender", "title": "Mixed-gender Grant" },
             { "type": "boolean", "name": "mixed_team", "title": "Mixed FDEF-SnT Team Composition" }
           ]
@@ -193,14 +609,20 @@ const surveyJson = {
       "elements": [
         {
           "type": "boolean",
-          "name": "partnerships_na",
-          "title": "Not applicable"
+          "name": "has_partnerships",
+          "isRequired": true,
+          "defaultValue": false,
+          "title": "Have you acquired or significantly contributed to industrial partnerships and/or collaborative projects with public bodies in the FinTech area?"
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Partnership {panelIndex}",
           "name": "partnerships",
           "title": "Partnerships",
-          "visibleIf": "{partnerships_na} = false",
+          "visibleIf": "{has_partnerships} = true",
+          "requiredIf": "{has_partnerships} = true",
           "panelAddText": "Add a partnership",
           "panelRemoveText": "Remove",
           "valueName": "partnerships",
@@ -211,10 +633,11 @@ const surveyJson = {
               "title": "Project name"
             },
             {
-              "type": "datepicker",
+              "type": "text",
               "name": "start_date",
               "title": "Start date",
-              "dateFormat": "yyyy-mm-dd"
+              "dateFormat": "yyyy-mm-dd",
+              "inputType": "date"
             },
             {
               "type": "dropdown",
@@ -231,11 +654,25 @@ const surveyJson = {
               "title": "Partner organization"
             },
             {
+              "type": "dropdown",
+              "name": "role",
+              "title": " Your role in the project",
+              "choices": [
+                "Principle Investigator",
+                "Co-Principal Investigator",
+                "Contributor",
+                "WP leader"
+              ],
+              "showOtherItem": true,
+              "otherText": "Other",
+              "otherPlaceholder": "Please specify"
+            },
+            {
               "type": "text",
               "name": "acquired_funding",
               "title": "Acquired funding (€)",
               "inputType": "number"
-            }
+            },
           ]
         }
       ]
@@ -250,18 +687,40 @@ const surveyJson = {
       "elements": [
         {
           "type": "boolean",
-          "name": "publications_na",
-          "title": "Not Applicable"
+          "name": "has_publications",
+          "isRequired": true,
+          "defaultValue": false,
+          "title": "Have you published papers eligible under the FutureFinTech Incentive & Reward Scheme (e.g. Scopus Top 10% journals, top conference proceedings, FT50 journal publications, peer-reviewed law publications)?"
+        },
+        {
+          "type": "radiogroup",
+          "name": "all_publications_on_orbilu",
+          renderAs: "checkbox",
+          "title": "Publications",
+          "visibleIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
+          "requiredIf": "{has_publications} = true and {only_checkbox_for_publications} = true",
+          choices: ["I confirm that all my publications related to FutureFinTech have been declared in accordance with the applicable guidelines (NCER22/IS/16570468/NCER-FT), uploaded to ORBilu, and tagged with the Research Centre “NCER-FT – FinTech National Centre of Excellence in Research”"],
+          validators: [
+            {
+              type: "expression",
+              expression: "{all_publications_on_orbilu} contains 'I confirm that all my publications related to FutureFinTech have been declared in accordance with the applicable guidelines (NCER22/IS/16570468/NCER-FT), uploaded to ORBilu, and tagged with the Research Centre “NCER-FT – FinTech National Centre of Excellence in Research”'",
+              text: "You must agree to continue."
+            }
+          ]
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Publication {panelIndex}",
           "name": "publications",
           "title": "Publications",
-          "visibleIf": "{publications_na} = false",
+          "visibleIf": "{has_publications} = true and {only_checkbox_for_publications} = false",
+          "requiredIf": "{has_publications} = true and {only_checkbox_for_publications} = false",
           "panelAddText": "Add Publication",
           "templateElements": [
             { "type": "text", "name": "publication_date", "title": "Publication Date", "inputType": "date" },
-            { "type": "text", "name": "publication_name", "title": "Publication Name" },
+            { "type": "text", "name": "publication_name", "title": "Title of publication" },
             { "type": "text", "name": "orbilu_link", "title": "OrbiLu Link", "inputType": "url" },
             { "type": "boolean", "name": "mixed_gender", "title": "Mixed-gender Team Composition" },
             { "type": "boolean", "name": "mixed_team", "title": "Mixed FDEF-SnT Team Composition" }
@@ -280,24 +739,24 @@ const surveyJson = {
       "elements": [
         {
           "type": "boolean",
-          "name": "phd_students_na",
-          "title": "Not applicable"
+          "name": "has_phd_students",
+          "isRequired": true,
+          "defaultValue": false,
+          "title": "Do you supervise or have you supervised PhD students related to FutureFinTech or the FinTech research area?"
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "PhD Student {panelIndex}",
           "name": "phd_students",
           "title": "PhD Students",
-          "visibleIf": "{phd_students_na} = false",
+          "visibleIf": "{has_phd_students} = true",
+          "requiredIf": "{has_phd_students} = true",
           "panelAddText": "Add a PhD student",
           "panelRemoveText": "Remove",
           "valueName": "phd_students",
           "templateElements": [
-            {
-              "type": "datepicker",
-              "name": "graduation_date",
-              "title": "Graduation date",
-              "dateFormat": "yyyy-mm-dd"
-            },
             {
               "type": "text",
               "name": "student_name",
@@ -309,6 +768,23 @@ const surveyJson = {
               "title": "Thesis title"
             },
             {
+              "type": "text",
+              "name": "graduation_year",
+              "title": "Year of graduation",
+              "inputType": "number",
+              "min": 1900,
+              "max": 2100,
+              "placeholder": "e.g. 2023",
+              "validators": [
+                {
+                  "type": "numeric",
+                  "minValue": 1900,
+                  "maxValue": 2100,
+                  "text": "Please enter a valid year"
+                }
+              ]
+            },
+            {
               "type": "dropdown",
               "name": "career_pursued",
               "title": "Career pursued",
@@ -318,9 +794,11 @@ const surveyJson = {
               ]
             },
             {
-              "type": "text",
+              "type": "dropdown",
               "name": "current_work_location",
-              "title": "Current work location"
+              "title": "Current work location",
+              "choices": COUNTRIES,
+              "searchEnable": true
             }
           ]
         }
@@ -337,23 +815,30 @@ const surveyJson = {
       "elements": [
         {
           "type": "boolean",
-          "name": "awards_na",
-          "title": "Not applicable"
+          "name": "has_awards",
+          "isRequired": true,
+          "defaultValue": false,
+          "title": "Have you received any awards or distinctions related to FutureFinTech or the FinTech research area?"
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Award {panelIndex}",
           "name": "awards",
           "title": "Awards",
-          "visibleIf": "{awards_na} = false",
+          "visibleIf": "{has_awards} = true",
+          "requiredIf": "{has_awards} = true",
           "panelAddText": "Add an award",
           "panelRemoveText": "Remove",
           "valueName": "awards",
           "templateElements": [
             {
-              "type": "datepicker",
+              "type": "text",
               "name": "award_date",
               "title": "Award date",
-              "dateFormat": "yyyy-mm-dd"
+              "dateFormat": "yyyy-mm-dd",
+              "inputType": "date"
             },
             {
               "type": "text",
@@ -385,23 +870,30 @@ const surveyJson = {
       "elements": [
         {
           "type": "boolean",
-          "name": "press_na",
-          "title": "Not applicable"
+          "name": "has_press",
+          "isRequired": true,
+          "defaultValue": false,
+          "title": "Do you have any press or media appearances related to FutureFinTech or the FinTech area to report?"
         },
         {
           "type": "paneldynamic",
+          "confirmDelete": true,
+          "displayMode": "tab",
+          "templateTabTitle": "Press {panelIndex}",
           "name": "press",
           "title": "Press",
-          "visibleIf": "{press_na} = false",
+          "visibleIf": "{has_press} = true",
+          "requiredIf": "{has_press} = true",
           "panelAddText": "Add a press appearance",
           "panelRemoveText": "Remove",
           "valueName": "press",
           "templateElements": [
             {
-              "type": "datepicker",
+              "type": "text",
               "name": "appearance_date",
               "title": "Date of appearance",
-              "dateFormat": "yyyy-mm-dd"
+              "dateFormat": "yyyy-mm-dd",
+              "inputType": "date"
             },
             {
               "type": "text",
@@ -442,9 +934,8 @@ const surveyJson = {
         {
           "type": "comment",
           "name": "planned_contributions",
-          "title": "Outline your planned contributions to FutureFinTech for 2025 (max 150 words).",
-          "isRequired": true,
-          "maxLength": 150
+          "title": "Outline your planned contributions to FutureFinTech for " + year + " (max 150 words).",
+          "maxLength": 150,
         }
       ]
     },
@@ -460,7 +951,6 @@ const surveyJson = {
           "type": "rating",
           "name": "form_intuitive",
           "title": "How intuitive did you find the form?",
-          "isRequired": true,
           "rateMin": 1,
           "rateMax": 5
         },
@@ -484,6 +974,17 @@ const surveyJson = {
 const survey = new Survey.Model(surveyJson);
 // survey.applyTheme(SurveyTheme.ContrastLight);
 // survey.applyTheme(SurveyTheme.LayeredLight);
+survey.applyTheme({
+  "cssVariables": {
+    "--primary": "#049DD9",
+  },
+});
+
+// ----------------------------------
+// Custom data
+// ----------------------------------
+survey.setVariable("only_checkbox_for_publications", only_checkbox_for_publications);
+survey.completeText = "Submit";
 
 // ----------------------------------
 // Helpers
@@ -501,7 +1002,7 @@ function setSubmissionIdInUrl(submissionId) {
 }
 
 // Fields to move under "contributor"
-const contributorFields = ["email", "name", "surname", "contributor_type", "affiliated_fellow_email", "discipline", "awards_na", "phd_students_na", "press_na", "partnerships_na", "events_na", "grants_na", "publications_na"];
+const contributorFields = ["consent", "email", "name", "surname", "contributor_type", "affiliated_fellow_email", "discipline", "has_awards", "has_phd_students", "has_press", "has_partnerships", "has_events", "has_new_fundings", "has_publications", "all_publications_on_orbilu"];
 
 /**
  * Converts flat form data into nested form with "contributor"
@@ -541,6 +1042,40 @@ function flattenContributor(data) {
   return flat;
 }
 
+function mapSurveyToDb(value) {
+  if (Array.isArray(value)) {
+    return value.map(mapSurveyToDb);
+  }
+  if (value !== null && typeof value === "object") {
+    const result = {};
+    Object.entries(value).forEach(([key, val]) => {
+      const newKey = key.endsWith("-Comment")
+        ? key.replace("-Comment", "Comment")
+        : key;
+      result[newKey] = mapSurveyToDb(val);
+    });
+    return result;
+  }
+  return value;
+}
+
+function mapDbToSurvey(value) {
+  if (Array.isArray(value)) {
+    return value.map(mapDbToSurvey);
+  }
+  if (value !== null && typeof value === "object") {
+    const result = {};
+    Object.entries(value).forEach(([key, val]) => {
+      const newKey = key.endsWith("Comment")
+        ? key.replace("Comment", "-Comment")
+        : key;
+      result[newKey] = mapDbToSurvey(val);
+    });
+    return result;
+  }
+  return value;
+}
+
 async function apiRequest(url, method, data = null) {
   const options = {
     method,
@@ -574,7 +1109,19 @@ function renderTopNav() {
     }
     try {
       await loadSubmission(id, reload = false);
-      setSubmissionIdInUrl(id);
+    } catch {
+      survey.notify("Invalid submission ID.", "error");
+    }
+  };
+
+  document.getElementById("downloadBtn").onclick = async () => {
+    const id = document.getElementById("submissionIdInput").value.trim();
+    if (!id) {
+      survey.notify("Provide an submission ID.", "error");
+      return;
+    }
+    try {
+      await downloadSubmission(id);
     } catch {
       survey.notify("Invalid submission ID.", "error");
     }
@@ -587,9 +1134,11 @@ function renderTopNav() {
 
 async function loadSubmission(submissionId, reload = true) {
   try {
-    const data = await apiRequest(`${API_BASE}/${submissionId}`, "GET");
-    survey.data = flattenContributor(data);
+    const data = await apiRequest(`${SUBMISSION_ENDPOINT}/${submissionId}`, "GET");
+    survey.data = flattenContributor(mapDbToSurvey(data));
     document.getElementById("submissionIdInput").value = submissionId;
+    setSubmissionIdInUrl(submissionId);
+    survey.notify("Your contribution has been successfully loaded and is now available for review. You can make changes and submit it when ready.", "success");
   } catch (err) {
     console.error("Failed to load submission", err);
     survey.notify("Unable to load submission #" + submissionId, "error");
@@ -597,6 +1146,40 @@ async function loadSubmission(submissionId, reload = true) {
       // Reload the page but remove any query parameters
       window.location.href = window.location.origin + window.location.pathname;
     }
+  }
+}
+
+// ----------------------------------
+// Download submission
+// ----------------------------------
+
+async function downloadSubmission(submissionId) {
+  try {
+    const response = await fetch(`${API_BASE}/export?app=${submissionId}`, { method: "GET" });
+    if (!response.ok) {
+      throw new Error("Download failed");
+    }
+    const contentDisposition = response.headers.get("content-disposition");
+    let filename = "FutureFintech_" + submissionId + ".xlsx";
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="?(.+)"?/);
+      if (match?.[1]) {
+        filename = match[1];
+      }
+    }
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+    survey.notify("Download started.", "success");
+  } catch (err) {
+    console.error("Failed to download your submission data", err);
+    survey.notify("Failed to download your submission data #" + submissionId, "error");
   }
 }
 
@@ -612,10 +1195,10 @@ async function saveDraft(survey) {
     survey.currentPage.validate();
     const result = await apiRequest(
       isUpdate
-        ? `${API_BASE}/${submissionId}?status=draft`
-        : `${API_BASE}?status=draft`,
+        ? `${SUBMISSION_ENDPOINT}/${submissionId}?status=draft`
+        : `${SUBMISSION_ENDPOINT}?status=draft`,
       isUpdate ? "PUT" : "POST",
-      nestContributor(survey.data)
+      nestContributor(mapSurveyToDb(survey.data))
     );
 
     if (!isUpdate && result.submission_id) {
@@ -630,7 +1213,7 @@ async function saveDraft(survey) {
     document.getElementById("submissionIdInput").value = submissionId;
 
   } catch (err) {
-    survey.notify("Unable to save draft. Ensure the all personal information of contributor are filled.", "error");
+    survey.notify("Unable to save draft. An error occured.", "error");
     console.error(err);
   }
 }
@@ -641,9 +1224,9 @@ async function saveSubmission(sender) {
 
   try {
     const result = await apiRequest(
-      isUpdate ? `${API_BASE}/${submissionId}` : API_BASE,
+      isUpdate ? `${SUBMISSION_ENDPOINT}/${submissionId}` : SUBMISSION_ENDPOINT,
       isUpdate ? "PUT" : "POST",
-      nestContributor(sender.data)
+      nestContributor(mapSurveyToDb(sender.data))
     );
 
     if (!isUpdate) {
@@ -711,13 +1294,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadSubmission(submissionId);
   }
 
-  survey.addNavigationItem({
+  const saveDraftItem = survey.addNavigationItem({
     id: "save-draft",
     title: "Save for later",
     action: () => saveDraft(survey),
+    visible: false,
   });
 
   survey.render(document.getElementById("surveyContainer"));
   survey.onCurrentPageChanged.add(renderTopNav);
   renderTopNav();
+
+  survey.onCurrentPageChanged.add(function (sender) {
+    const pageIndex = sender.pages.indexOf(sender.currentPage);
+    saveDraftItem.visible = pageIndex >= 2;
+  });
 });
