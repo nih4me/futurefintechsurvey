@@ -1156,7 +1156,7 @@ async function loadSubmission(submissionId, reload = true) {
 
 async function downloadSubmission(submissionId) {
   try {
-    const response = await fetch(`${API_BASE}/export?submission_id=${submissionId}`, { method: "GET" });
+    const response = await fetch(`${API_BASE}/export/?submission_id=${submissionId}`, { method: "GET" });
     if (!response.ok) {
       throw new Error("Download failed");
     }
