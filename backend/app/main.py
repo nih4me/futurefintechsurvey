@@ -8,6 +8,7 @@ from database import Base, engine
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
+    docs_url="/docs/",
     title="FutureFinTech Fellows API",
     version="1.0.0"
 )
