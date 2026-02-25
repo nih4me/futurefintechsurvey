@@ -32,6 +32,10 @@ div[id^="sp_"] {
   background: #049DD9;
 }
 
+#startNewBtn {
+  display: none !important;
+}
+
 /* Left (logo) */
 .nav-left {
   flex: 0 0 auto;
