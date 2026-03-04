@@ -32,6 +32,10 @@ div[id^="sp_"] {
   background: #049DD9;
 }
 
+#startNewBtn {
+  display: none !important;
+}
+
 /* Left (logo) */
 .nav-left {
   flex: 0 0 auto;
@@ -127,6 +131,13 @@ div[id^="sp_"] {
   height: 35px;
   vertical-align: middle;
   margin-left: 20px;
+}
+
+#banner img {
+  display: block;
+  height: 80px;
+  width: auto;
+  margin: auto;
 }
 
 .modal {

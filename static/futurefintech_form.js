@@ -272,12 +272,15 @@ const surveyJson = {
           type: "html",
           name: "introText",
           html: `
-            <div id="parners-logo" style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
+            <div id="banner" style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
+              <img src="./banner.png" alt="Parners logo" />
+            </div>
+            <!-- <div id="parners-logo" style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
               <img src="./fnr.jpg" alt="Logo FNR" />
               <img src="./lux-gov.jpg" alt="Logo Government of Luxembourg" />
               <img src="./uni.svg" alt="Logo University of Luxembourg" />
-            </div>
-            <div style="max-width: 700px; margin: 0 auto; line-height: 1.6;">
+            </div> -->
+            <div style="max-width: 700px; margin: 0 auto; line-height: 1.6; text-align: justify;">
               <p>
                 The objective of the FutureFinTech Incentive & Reward Scheme is to recognise and encourage contributions that strengthen the FutureFinTech community, increase its impact, and support the development of new activities.
               </p>
@@ -501,8 +504,8 @@ const surveyJson = {
               "title": "Event Type",
               "choices": [
                 "FutureFinTech lectures",
-                "FutureFinTech x industry (Talks, roundtables, or workshops connecting research and industry)",
-                "FutureFinTech forums (Interdisciplinary forums and thematic workshops)",
+                "FutureFinTech x industry (talks, roundtables, or workshops connecting research and industry)",
+                "FutureFinTech forums (interdisciplinary forums and thematic workshops)",
                 "Transversal themes (workshops or sessions with focus on training and capacity building / gender / open science and research transparency)",
                 "Working papers",
                 "FutureFinTech Federated Conference (F3C)",
