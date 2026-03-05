@@ -26,39 +26,41 @@ router = APIRouter(prefix="/export", tags=["Export"])
 
 def write_table_sheet(wb, title, columns, rows):
     ws = wb.create_sheet(title=title)
-    ws.append(columns)
+
+    headers = [label for field, label in columns]
+    ws.append(headers)
 
     for row in rows:
-        ws.append([getattr(row, col) for col in columns])
+        ws.append([getattr(row, field) for field, label in columns])
 
     autosize_columns(ws)
 
-def write_contributors_sheet(wb, db: Session, submission_id = None):
+def write_contributors_sheet(wb, db: Session, submission_id=None):
     ws = wb.create_sheet(title="Contributors")
 
-    headers = [
-        "submission_id",
-        "created_at",
-        "updated_at",
-        "status",
-        "consent",
-        "email",
-        "name",
-        "surname",
-        "contributor_type",
-        "affiliated_fellow_email",
-        "discipline",
-        "has_events",
-        "has_new_fundings",
-        "has_publications",
-        "all_publications_on_orbilu",
-        "has_awards",
-        "has_partnerships",
-        "has_phd_students",
-        "has_press",
+    columns = [
+        ("submission_id", "Submission ID"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
+        ("status", "Submission Status"),
+        ("consent", "Consent Given"),
+        ("email", "Email"),
+        ("name", "First Name"),
+        ("surname", "Last Name"),
+        ("contributor_type", "Contributor Type"),
+        ("affiliated_fellow_email", "Affiliated Fellow Email"),
+        ("discipline", "Discipline"),
+        ("has_events", "Has Events"),
+        ("has_new_fundings", "Has New Fundings"),
+        ("has_publications", "Has Publications"),
+        ("all_publications_on_orbilu", "All Publications on ORBiLu"),
+        ("has_awards", "Has Awards"),
+        ("has_partnerships", "Has Partnerships"),
+        ("has_phd_students", "Has PhD Students"),
+        ("has_press", "Has Press Appearances"),
     ]
 
-    ws.append(headers)
+    ws.append([label for field, label in columns])
 
     query = (
         db.query(Submission, ContributorInfo)
@@ -72,27 +74,28 @@ def write_contributors_sheet(wb, db: Session, submission_id = None):
     rows = query.all()
 
     for app, contributor in rows:
-        ws.append([
-            app.submission_id,
-            app.created_at,
-            app.updated_at,
-            app.status,
-            contributor.consent,
-            contributor.email,
-            contributor.name,
-            contributor.surname,
-            contributor.contributor_type,
-            contributor.affiliated_fellow_email,
-            contributor.discipline,
-            contributor.has_events,
-            contributor.has_new_fundings,
-            contributor.has_publications,
-            contributor.all_publications_on_orbilu,
-            contributor.has_awards,
-            contributor.has_partnerships,
-            contributor.has_phd_students,
-            contributor.has_press,
-        ])
+        data = {
+            "submission_id": app.submission_id,
+            "created_at": app.created_at,
+            "updated_at": app.updated_at,
+            "status": app.status,
+            "consent": contributor.consent,
+            "email": contributor.email,
+            "name": contributor.name,
+            "surname": contributor.surname,
+            "contributor_type": contributor.contributor_type,
+            "affiliated_fellow_email": contributor.affiliated_fellow_email,
+            "discipline": contributor.discipline,
+            "has_events": contributor.has_events,
+            "has_new_fundings": contributor.has_new_fundings,
+            "has_publications": contributor.has_publications,
+            "all_publications_on_orbilu": contributor.all_publications_on_orbilu,
+            "has_awards": contributor.has_awards,
+            "has_partnerships": contributor.has_partnerships,
+            "has_phd_students": contributor.has_phd_students,
+            "has_press": contributor.has_press,
+        }
+        ws.append([data[field] for field, label in columns])
 
     autosize_columns(ws)
 
@@ -114,52 +117,105 @@ def export_submissions(submission_id: Optional[str] = None, db: Session = Depend
     write_table_sheet(
         wb,
         "Events",
-        ["submission_id", "event_date", "event_name", "event_type", "location", "role", "roleComment"],
+        [
+            ("submission_id", "Submission ID"),
+            ("event_date", "Event Date"),
+            ("event_name", "Event Name"),
+            ("event_type", "Event Type"),
+            ("location", "Location"),
+            ("role", "Role"),
+            ("roleComment", "Role Comment"),
+        ],
         get_rows(db.query(Event), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Publications",
-        ["submission_id", "publication_name", "publication_date", "orbilu_link", "mixed_gender", "mixed_team"],
+        [
+            ("submission_id", "Submission ID"),
+            ("publication_name", "Publication Name"),
+            ("publication_date", "Publication Date"),
+            ("orbilu_link", "ORBiLu Link"),
+            ("mixed_gender", "Mixed Gender Team"),
+            ("mixed_team", "Mixed Team"),
+        ],
         get_rows(db.query(Publication), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Grants",
-        ["submission_id", "project_name", "funder", "funderComment", "role", "roleComment", "funding_programme", "start_date", "end_date", "mixed_gender", "mixed_team"],
+        [
+            ("submission_id", "Submission ID"),
+            ("project_name", "Project Name"),
+            ("funder", "Funder"),
+            ("funderComment", "Funder Comment"),
+            ("role", "Role"),
+            ("roleComment", "Role Comment"),
+            ("funding_programme", "Funding Programme"),
+            ("start_date", "Start Date"),
+            ("end_date", "End Date"),
+            ("mixed_gender", "Mixed Gender Team"),
+            ("mixed_team", "Mixed Team"),
+        ],
         get_rows(db.query(GrantProject), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Awards",
-        ["submission_id", "award_date", "award_title", "award_subject", "award_issuer"],
+        [
+            ("submission_id", "Submission ID"),
+            ("award_date", "Award Date"),
+            ("award_title", "Award Title"),
+            ("award_subject", "Award Subject"),
+            ("award_issuer", "Award Issuer"),
+        ],
         get_rows(db.query(Award), submission_id)
     )
 
     write_table_sheet(
         wb,
         "PhD Students",
-        ["submission_id", "graduation_year", "student_name", "thesis_title",
-         "career_pursued", "current_work_location"],
+        [
+            ("submission_id", "Submission ID"),
+            ("graduation_year", "Graduation Year"),
+            ("student_name", "Student Name"),
+            ("thesis_title", "Thesis Title"),
+            ("career_pursued", "Career Pursued"),
+            ("current_work_location", "Current Work Location"),
+        ],
         get_rows(db.query(PhDStudent), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Press",
-        ["submission_id", "appearance_date", "press_name", "press_type",
-         "appearance_type", "subject"],
+        [
+            ("submission_id", "Submission ID"),
+            ("appearance_date", "Appearance Date"),
+            ("press_name", "Press Name"),
+            ("press_type", "Press Type"),
+            ("appearance_type", "Appearance Type"),
+            ("subject", "Subject"),
+        ],
         get_rows(db.query(PressAppearance), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Partnerships",
-        ["submission_id", "project_name", "start_date",
-         "partnership_type", "role", "roleComment", "partner", "acquired_funding"],
+        [
+            ("submission_id", "Submission ID"),
+            ("project_name", "Project Name"),
+            ("start_date", "Start Date"),
+            ("partnership_type", "Partnership Type"),
+            ("role", "Role"),
+            ("roleComment", "Role Comment"),
+            ("partner", "Partner"),
+            ("acquired_funding", "Acquired Funding"),
+        ],
         get_rows(db.query(PartnershipProject), submission_id)
     )
 
