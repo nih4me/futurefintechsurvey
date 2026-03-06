@@ -10,6 +10,7 @@ from database import get_db
 from models import (
     Submission,
     ContributorInfo,
+    Narrative,
     Event,
     Publication,
     GrantProject,
@@ -22,23 +23,9 @@ from models import (
 )
 from utils import autosize_columns
 
-router = APIRouter(prefix="/export", tags=["Export"])
+EXPORT_COLUMNS = {
 
-def write_table_sheet(wb, title, columns, rows):
-    ws = wb.create_sheet(title=title)
-
-    headers = [label for field, label in columns]
-    ws.append(headers)
-
-    for row in rows:
-        ws.append([getattr(row, field) for field, label in columns])
-
-    autosize_columns(ws)
-
-def write_contributors_sheet(wb, db: Session, submission_id=None):
-    ws = wb.create_sheet(title="Contributors")
-
-    columns = [
+    "Contributors": [
         ("submission_id", "Submission ID"),
         ("created_at", "Created At"),
         ("updated_at", "Updated At"),
@@ -58,7 +45,115 @@ def write_contributors_sheet(wb, db: Session, submission_id=None):
         ("has_partnerships", "Has Partnerships"),
         ("has_phd_students", "Has PhD Students"),
         ("has_press", "Has Press Appearances"),
-    ]
+    ],
+
+    "Narrative": [
+        ("submission_id", "Submission ID"),
+        ("narrative", "Narrative"),
+    ],
+
+    "Events": [
+        ("submission_id", "Submission ID"),
+        ("event_date", "Event Date"),
+        ("event_name", "Event Name"),
+        ("event_type", "Event Type"),
+        ("location", "Location"),
+        ("role", "Role"),
+        ("roleComment", "Role Comment"),
+    ],
+
+    "Publications": [
+        ("submission_id", "Submission ID"),
+        ("publication_name", "Publication Name"),
+        ("publication_date", "Publication Date"),
+        ("orbilu_link", "ORBiLu Link"),
+        ("mixed_gender", "Mixed Gender Team"),
+        ("mixed_team", "Mixed Team"),
+    ],
+
+    "Grants": [
+        ("submission_id", "Submission ID"),
+        ("project_name", "Project Name"),
+        ("start_date", "Start Date"),
+        ("end_date", "End Date"),
+        ("funder", "Funder"),
+        ("funderComment", "Funder Comment"),
+        ("funding_programme", "Funding Programme"),
+        ("role", "Role"),
+        ("roleComment", "Role Comment"),
+        ("mixed_gender", "Mixed Gender Team"),
+        ("mixed_team", "Mixed Team"),
+    ],
+
+    "Partnerships": [
+        ("submission_id", "Submission ID"),
+        ("project_name", "Project Name"),
+        ("start_date", "Start Date"),
+        ("partnership_type", "Partnership Type"),
+        ("partner", "Partner organization"),
+        ("role", "Role"),
+        ("roleComment", "Role Comment"),
+        ("acquired_funding", "Acquired Funding"),
+    ],
+
+    "PhD Students": [
+        ("submission_id", "Submission ID"),
+        ("student_name", "Student Name"),
+        ("thesis_title", "Thesis Title"),
+        ("graduation_year", "Graduation Year"),
+        ("career_pursued", "Career Pursued"),
+        ("current_work_location", "Current Work Location"),
+    ],
+
+
+    "Awards": [
+        ("submission_id", "Submission ID"),
+        ("award_date", "Award Date"),
+        ("award_title", "Award Title"),
+        ("award_subject", "Award Subject"),
+        ("award_issuer", "Issuing Organization"),
+    ],
+
+    "Press": [
+        ("submission_id", "Submission ID"),
+        ("appearance_date", "Appearance Date"),
+        ("press_name", "Media Outlet"),
+        ("press_type", "MediaType"),
+        ("appearance_type", "Appearance Type"),
+        ("subject", "Subject"),
+    ],
+
+    "Planned Contributions": [
+        ("submission_id", "Submission ID"),
+        ("planned_text", "Planned Contributions"),
+    ],
+
+    "Feedback": [
+        ("submission_id", "Submission ID"),
+        ("form_intuitive", "Form Intuitiveness"),
+        ("form_easy", "Ease of Information Entry"),
+        ("suggestions", "Suggestions"),
+    ],
+
+}
+
+router = APIRouter(prefix="/export", tags=["Export"])
+
+def write_table_sheet(wb, title, columns, rows):
+    ws = wb.create_sheet(title=title)
+
+    headers = [label for field, label in columns]
+    ws.append(headers)
+
+    for row in rows:
+        ws.append([getattr(row, field) for field, label in columns])
+
+    autosize_columns(ws)
+
+def write_contributors_sheet(wb, db: Session, submission_id=None):
+    ws = wb.create_sheet(title="Contributors")
+
+    columns = EXPORT_COLUMNS["Contributors"]
 
     ws.append([label for field, label in columns])
 
@@ -116,107 +211,79 @@ def export_submissions(submission_id: Optional[str] = None, db: Session = Depend
     # Generic sheets
     write_table_sheet(
         wb,
+        "Narrative",
+        EXPORT_COLUMNS["Narrative"],
+        get_rows(db.query(Narrative), submission_id)
+    )
+
+    write_table_sheet(
+        wb,
         "Events",
-        [
-            ("submission_id", "Submission ID"),
-            ("event_date", "Event Date"),
-            ("event_name", "Event Name"),
-            ("event_type", "Event Type"),
-            ("location", "Location"),
-            ("role", "Role"),
-            ("roleComment", "Role Comment"),
-        ],
+        EXPORT_COLUMNS["Events"],
         get_rows(db.query(Event), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Publications",
-        [
-            ("submission_id", "Submission ID"),
-            ("publication_name", "Publication Name"),
-            ("publication_date", "Publication Date"),
-            ("orbilu_link", "ORBiLu Link"),
-            ("mixed_gender", "Mixed Gender Team"),
-            ("mixed_team", "Mixed Team"),
-        ],
+        EXPORT_COLUMNS["Publications"],
         get_rows(db.query(Publication), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Grants",
-        [
-            ("submission_id", "Submission ID"),
-            ("project_name", "Project Name"),
-            ("funder", "Funder"),
-            ("funderComment", "Funder Comment"),
-            ("role", "Role"),
-            ("roleComment", "Role Comment"),
-            ("funding_programme", "Funding Programme"),
-            ("start_date", "Start Date"),
-            ("end_date", "End Date"),
-            ("mixed_gender", "Mixed Gender Team"),
-            ("mixed_team", "Mixed Team"),
-        ],
+        EXPORT_COLUMNS["Grants"],
         get_rows(db.query(GrantProject), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Awards",
-        [
-            ("submission_id", "Submission ID"),
-            ("award_date", "Award Date"),
-            ("award_title", "Award Title"),
-            ("award_subject", "Award Subject"),
-            ("award_issuer", "Award Issuer"),
-        ],
+        EXPORT_COLUMNS["Awards"],
         get_rows(db.query(Award), submission_id)
     )
 
     write_table_sheet(
         wb,
         "PhD Students",
-        [
-            ("submission_id", "Submission ID"),
-            ("graduation_year", "Graduation Year"),
-            ("student_name", "Student Name"),
-            ("thesis_title", "Thesis Title"),
-            ("career_pursued", "Career Pursued"),
-            ("current_work_location", "Current Work Location"),
-        ],
+        EXPORT_COLUMNS["PhD Students"],
         get_rows(db.query(PhDStudent), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Press",
-        [
-            ("submission_id", "Submission ID"),
-            ("appearance_date", "Appearance Date"),
-            ("press_name", "Press Name"),
-            ("press_type", "Press Type"),
-            ("appearance_type", "Appearance Type"),
-            ("subject", "Subject"),
-        ],
+        EXPORT_COLUMNS["Press"],
         get_rows(db.query(PressAppearance), submission_id)
     )
 
     write_table_sheet(
         wb,
         "Partnerships",
-        [
-            ("submission_id", "Submission ID"),
-            ("project_name", "Project Name"),
-            ("start_date", "Start Date"),
-            ("partnership_type", "Partnership Type"),
-            ("role", "Role"),
-            ("roleComment", "Role Comment"),
-            ("partner", "Partner"),
-            ("acquired_funding", "Acquired Funding"),
-        ],
+        EXPORT_COLUMNS["Partnerships"],
         get_rows(db.query(PartnershipProject), submission_id)
+    )
+
+    write_table_sheet(
+        wb,
+        "Partnerships",
+        EXPORT_COLUMNS["Partnerships"],
+        get_rows(db.query(PartnershipProject), submission_id)
+    )
+
+    write_table_sheet(
+        wb,
+        "Planned Contributions",
+        EXPORT_COLUMNS["Planned Contributions"],
+        get_rows(db.query(PlannedContribution), submission_id)
+    )
+
+    write_table_sheet(
+        wb,
+        "Feedback",
+        EXPORT_COLUMNS["Feedback"],
+        get_rows(db.query(Feedback), submission_id)
     )
 
     # Stream file

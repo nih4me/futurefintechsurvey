@@ -1,5 +1,6 @@
 // const SURVEY_ID = 1;
-const API_BASE = "http://ttodevthree.uni.lux:8080";
+// const API_BASE = "http://ttodevthree.uni.lux:8080";
+const API_BASE = "http://localhost:8001";
 const SUBMISSION_ENDPOINT =  API_BASE + '/api/submissions'
 const COUNTRIES = [
 	"Afghanistan",
@@ -463,8 +464,14 @@ const surveyJson = {
         {
           "type": "comment",
           "name": "narrative",
-          "title": "Provide a short narrative (max 250 characters) highlighting your contributions and impact in FinTech.",
-          "maxLength": 250,
+          "title": "Provide a short narrative (max 250 words) highlighting your contributions and impact in FinTech.",
+          validators: [
+            {
+              type: "expression",
+              expression: "wordCount({narrative}) <= 250",
+              text: "Maximum 250 words allowed."
+            }
+          ]
         }
       ]
     },
@@ -938,8 +945,14 @@ const surveyJson = {
         {
           "type": "comment",
           "name": "planned_contributions",
-          "title": "Outline your planned contributions to FutureFinTech for " + year + " (max 150 characters).",
-          "maxLength": 150,
+          "title": "Outline your planned contributions to FutureFinTech for " + year + " (max 250 words).",
+          validators: [
+            {
+              type: "expression",
+              expression: "wordCount({planned_contributions}) <= 250",
+              text: "Maximum 250 words allowed."
+            }
+          ]
         }
       ]
     },
@@ -974,6 +987,13 @@ const surveyJson = {
     }
   ]
 };
+
+
+Survey.FunctionFactory.Instance.register("wordCount", function(params) {
+  const s = params[0] || "";
+  const words = s.trim().split(/\s+/).filter(Boolean);
+  return words.length;
+});
 
 const survey = new Survey.Model(surveyJson);
 // survey.applyTheme(SurveyTheme.ContrastLight);
@@ -1282,10 +1302,23 @@ survey.onComplete.add(sender => {
   saveSubmission(sender);
 });
 
-// Optional: auto-save draft
-// survey.onValueChanged.add(Survey.FunctionFactory.Instance.create("autoSave", () => {
-//   saveSubmission(survey);
-// }));
+
+function countWords(text) {
+  if (!text) return 0;
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+// function wordsLimitProcess(sender, options) {
+//   if(options.name === "narrative" || options.name == 'planned_contributions') {
+//     const question = sender.getQuestionByName(options.name);
+//     const words = countWords(options.value);
+//     question.description = words + " / 250 words";
+//   }
+// }
+
+// survey.onValueChanging.add(function(sender, options) {
+//   wordsLimitProcess(sender, options);
+// });
 
 // ----------------------------------
 // Init
@@ -1314,3 +1347,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     saveDraftItem.visible = pageIndex >= 2;
   });
 });
+
+
