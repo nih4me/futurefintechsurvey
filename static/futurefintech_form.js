@@ -1,6 +1,5 @@
 // const SURVEY_ID = 1;
-// const API_BASE = "http://ttodevthree.uni.lux:8080";
-const API_BASE = "http://localhost:8001";
+const API_BASE = "http://ttodevthree.uni.lux:8080";
 const SUBMISSION_ENDPOINT =  API_BASE + '/api/submissions'
 const COUNTRIES = [
 	"Afghanistan",
