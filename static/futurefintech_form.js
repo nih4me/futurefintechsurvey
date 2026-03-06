@@ -296,6 +296,10 @@ const surveyJson = {
               <p>
                 To ensure fair and transparent assessment, only activities recorded in this form will be taken into account, and Fellows and Affiliated Researchers are responsible for the accuracy and completeness of the information provided.
               </p>
+
+              <p>
+                <strong>This forms should take approximately 15 minutes to answer if you have all the info collected.</strong>
+              </p>
             </div>
           `
         }
