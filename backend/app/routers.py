@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from typing import Optional
 from sqlalchemy.orm import Session
 from database import get_db
 from schemas import SubmissionSurveySchema
@@ -115,12 +116,16 @@ def load_submission(submission_id: str, db: Session = Depends(get_db)):
 def update_submission(
     submission_id: str,
     payload: SubmissionSurveySchema,
+    status: Optional[str] = Query(None),
     db: Session = Depends(get_db)
 ):
-    if not db.query(Submission).filter_by(submission_id=submission_id).first():
+    submission = db.query(Submission).filter_by(submission_id=submission_id).first()
+    if not submission:
         raise HTTPException(status_code=404, detail="Submission not found")
 
     try:
+        if status is not None:
+            submission.status = status
         # UPSERT root tables
         db.merge(ContributorInfo(submission_id=submission_id, **payload.contributor.dict()))
         db.merge(Narrative(submission_id=submission_id, narrative=payload.narrative))

@@ -1251,7 +1251,7 @@ async function saveSubmission(sender) {
 
   try {
     const result = await apiRequest(
-      isUpdate ? `${SUBMISSION_ENDPOINT}/${submissionId}` : SUBMISSION_ENDPOINT,
+      isUpdate ? `${SUBMISSION_ENDPOINT}/${submissionId}?status=submitted` : `${SUBMISSION_ENDPOINT}?status=submitted`,
       isUpdate ? "PUT" : "POST",
       nestContributor(mapSurveyToDb(sender.data))
     );
