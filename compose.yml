@@ -19,7 +19,7 @@ services:
     labels:
       caddy: futurefintechfellowship.uni.lux
       caddy.reverse_proxy: "{{ upstreams 8080 }}"
-      caddy.tls: internal
+      caddy.tls: /certs/futurefintechfellowship.uni.lux.crt /certs/futurefintechfellowship.uni.lux.key
 
   api:
     image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.0
