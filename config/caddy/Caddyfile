@@ -14,7 +14,7 @@
     }
   }
 
-  @api path /api/* /edit/* /export/* /docs/*
+  @api path /api/* /edit/* /export/* /export /docs/*
   
   handle @api {
     reverse_proxy futurefintechsurvey_api:8000 {
