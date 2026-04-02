@@ -22,7 +22,7 @@
       }
   }
   
-  import cors ${CADDY_DOMAIN}:{$CADDY_PORT}
+  import cors ${CORS_ORIGIN}
   root * /static
   file_server 
 }
