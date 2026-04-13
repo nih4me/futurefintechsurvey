@@ -14,15 +14,16 @@
     }
   }
 
-  @api path /api/* /edit/* /export/* /docs/*
+  @api path /api/* /edit/* /export/* /export /docs/*
   
   handle @api {
     reverse_proxy futurefintechsurvey_api:8000 {
-        header_up X-Real-IP {remote_host}
+	header_up X-Real-IP {header.X-Forwarded-For}
+	header_up X-Forwarded-Proto {header.X-Forwarded-Proto}
       }
   }
   
-  import cors ${CADDY_DOMAIN}:{$CADDY_PORT}
+  import cors ${CORS_ORIGIN}
   root * /static
   file_server 
 }

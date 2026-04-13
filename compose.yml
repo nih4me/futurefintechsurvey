@@ -11,11 +11,38 @@ services:
       - ./static/:/static
     environment:
       LOG_FILE: "/data/access.log"
-      CADDY_DOMAIN: "http://ttodevthree.uni.lux"
+      CADDY_DOMAIN: "http://futurefintechfellowship.uni.lux"
       CADDY_PORT: "8080"
-      CADDY_ENVIRONMENT: "development"
+      CORS_ORIGIN: "https://futurefintechfellowship.uni.lux"
+    networks:
+      - caddy
+    labels:
+      caddy: futurefintechfellowship.uni.lux
+      caddy.reverse_proxy: "{{ upstreams 8080 }}"
+      caddy.tls: /certs/futurefintechfellowship.uni.lux.crt /certs/futurefintechfellowship.uni.lux.key
+
   api:
-    image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey
+    image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.0
     container_name: futurefintechsurvey_api
     volumes:
       - ./data/db:/db
+    networks:
+      - caddy
+    command:
+      [
+        "uvicorn",
+        "main:app",
+        "--log-level",
+        "trace",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--proxy-headers",
+        "--forwarded-allow-ips",
+        "*",
+      ]
+
+networks:
+  caddy:
+    external: true
