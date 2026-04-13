@@ -22,6 +22,7 @@ from models import (
     PlannedContribution
 )
 from utils import autosize_columns
+from auth import verify_credentials
 
 EXPORT_COLUMNS = {
 
@@ -195,7 +196,14 @@ def write_contributors_sheet(wb, db: Session, submission_id=None):
     autosize_columns(ws)
 
 @router.get("/")
-def export_submissions(submission_id: Optional[str] = None, db: Session = Depends(get_db)):
+def export_submissions(auth = Depends(verify_credentials),  db: Session = Depends(get_db)):
+    if auth["auth_type"] == "submission_id":
+        submission_id = auth["submission_id"]
+        if not submission_id:
+            return None
+    if auth['auth_type'] == 'basic':
+        submission_id = None
+            
     wb = Workbook()
     wb.remove(wb.active)  # remove default empty sheet
 
