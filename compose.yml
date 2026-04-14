@@ -28,6 +28,9 @@ services:
       - ./data/db:/db
     networks:
       - caddy
+    environment:
+      BASIC_AUTH_USERNAME: "admin"
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
     command:
       [
         "uvicorn",
