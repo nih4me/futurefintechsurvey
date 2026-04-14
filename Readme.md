@@ -71,8 +71,8 @@ cd backend
 pip install -r requirements.txt
 
 # Set environment variables (create .env file)
-echo "BASIC_AUTH_USERNAME=admin" > backend/.env
-echo "BASIC_AUTH_PASSWORD=your_password" >> backend/.env
+echo "BASIC_AUTH_USERNAME=admin" > backend/app/.env
+echo "BASIC_AUTH_PASSWORD=your_password" >> backend/app/.env
 
 # Run the API
 cd backend/app
