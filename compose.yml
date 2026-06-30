@@ -22,12 +22,15 @@ services:
       caddy.tls: /certs/futurefintechfellowship.uni.lux.crt /certs/futurefintechfellowship.uni.lux.key
 
   api:
-    image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.0
+    image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.1
     container_name: futurefintechsurvey_api
     volumes:
       - ./data/db:/db
     networks:
       - caddy
+    environment:
+      BASIC_AUTH_USERNAME: "admin"
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
     command:
       [
         "uvicorn",
