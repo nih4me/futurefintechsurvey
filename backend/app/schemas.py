@@ -17,7 +17,7 @@ class ContributorInfoSchema(BaseModel):
     has_events: Optional[bool] = False
     has_new_fundings: Optional[bool] = False
     has_publications: Optional[bool] = False
-    all_publications_on_orbilu: Optional[str]
+    all_publications_on_orbilu: Optional[str] = False
     has_awards: Optional[bool] = False
     has_partnerships: Optional[bool] = False
     has_phd_students: Optional[bool] = False
