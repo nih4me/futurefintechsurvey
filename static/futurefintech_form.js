@@ -1294,7 +1294,6 @@ function handleValidationErrors(err, survey) {
     }
   });
 
-  survey.focusFirstError();
 }
 
 // ----------------------------------
