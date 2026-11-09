@@ -8,7 +8,7 @@ class Submission(Base):
     submission_id = Column(String(20), primary_key=True)
     status = Column(Enum("draft", "submitted", "reviewed"), default="submitted")
     created_at = Column(DateTime, server_default=func.now())
-    updated_at = Column(DateTime, onupdate=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class ContributorInfo(Base):
     __tablename__ = "contributor_info"
@@ -19,7 +19,7 @@ class ContributorInfo(Base):
         primary_key=True
     )
     consent = Column(String(255))
-    email = Column(String(255))
+    email = Column(String(255), unique=True)
     name = Column(String(100))
     surname = Column(String(100))
     contributor_type = Column(Enum("Fellow", "Affiliated Researcher", "other"))
@@ -33,6 +33,8 @@ class ContributorInfo(Base):
     has_partnerships = Column(Boolean)
     has_phd_students = Column(Boolean)
     has_press = Column(Boolean)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
     
 
 class Narrative(Base):
@@ -44,6 +46,8 @@ class Narrative(Base):
         primary_key=True
     )
     narrative = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class Event(Base):
     __tablename__ = "events"
@@ -59,6 +63,8 @@ class Event(Base):
     location = Column(String(150))
     role = Column(String(150))
     roleComment = Column(String(150))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class GrantProject(Base):
     __tablename__ = "grants_projects"
@@ -78,6 +84,8 @@ class GrantProject(Base):
     roleComment = Column(String(255))
     mixed_gender = Column(Boolean)
     mixed_team = Column(Boolean)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class PartnershipProject(Base):
     __tablename__ = "partnership_projects"
@@ -94,6 +102,8 @@ class PartnershipProject(Base):
     role = Column(String(255))
     roleComment = Column(String(255))
     acquired_funding = Column(Numeric(12,2))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class Publication(Base):
     __tablename__ = "publications"
@@ -108,6 +118,8 @@ class Publication(Base):
     orbilu_link = Column(String(500))
     mixed_gender = Column(Boolean)
     mixed_team = Column(Boolean)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class PhDStudent(Base):
     __tablename__ = "phd_students"
@@ -122,6 +134,8 @@ class PhDStudent(Base):
     thesis_title = Column(String(500))
     career_pursued = Column(Enum("Industry", "Academic", "other"))
     current_work_location = Column(String(150))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 
 class Award(Base):
@@ -136,6 +150,8 @@ class Award(Base):
     award_title = Column(String(255))
     award_subject = Column(String(255))
     award_issuer = Column(String(255))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class PressAppearance(Base):
     __tablename__ = "press_appearances"
@@ -150,6 +166,8 @@ class PressAppearance(Base):
     press_type = Column(Enum("National", "International", "other"))
     appearance_type = Column(String(255))
     subject = Column(String(255))
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class PlannedContribution(Base):
     __tablename__ = "planned_contributions"
@@ -160,6 +178,8 @@ class PlannedContribution(Base):
         primary_key=True
     )
     planned_text = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
 class Feedback(Base):
     __tablename__ = "feedback"
@@ -172,3 +192,5 @@ class Feedback(Base):
     form_intuitive = Column(Integer)
     form_easy = Column(Integer)
     suggestions = Column(Text)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())

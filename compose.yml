@@ -25,7 +25,7 @@ services:
     image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.1
     container_name: futurefintechsurvey_api
     volumes:
-      - ./data/db:/db
+      - ./data/db:/app/db
     networks:
       - caddy
     environment:

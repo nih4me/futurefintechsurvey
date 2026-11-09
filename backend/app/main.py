@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import router as submissions_router
 from export import router as exports_router
+from recovery import router as recovery_router
 from database import Base, engine
 
 # Create tables (optional – only for dev)
@@ -25,3 +26,4 @@ app.add_middleware(
 
 app.include_router(submissions_router)
 app.include_router(exports_router)
+app.include_router(recovery_router)

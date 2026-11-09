@@ -10,6 +10,32 @@ from sqlalchemy.orm import Session
 
 security = HTTPBasic(auto_error=False)
 
+def verify_admin(
+    credentials: Optional[HTTPBasicCredentials] = Depends(security),
+):
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Basic auth required for admin access",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    correct_username = secrets.compare_digest(
+        credentials.username, settings.basic_auth_username
+    )
+    correct_password = secrets.compare_digest(
+        credentials.password, settings.basic_auth_password
+    )
+
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid admin credentials",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    return {"user": credentials.username}
+
 def verify_credentials(
     credentials: Optional[HTTPBasicCredentials] = Depends(security),
     submission_id: Optional[str] = Query(default=None),

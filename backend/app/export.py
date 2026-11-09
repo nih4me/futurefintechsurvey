@@ -22,7 +22,7 @@ from models import (
     PlannedContribution
 )
 from utils import autosize_columns
-from auth import verify_credentials
+from auth import verify_admin
 
 EXPORT_COLUMNS = {
 
@@ -51,6 +51,8 @@ EXPORT_COLUMNS = {
     "Narrative": [
         ("submission_id", "Submission ID"),
         ("narrative", "Narrative"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "Events": [
@@ -61,6 +63,8 @@ EXPORT_COLUMNS = {
         ("location", "Location"),
         ("role", "Role"),
         ("roleComment", "Role Comment"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "Publications": [
@@ -70,6 +74,8 @@ EXPORT_COLUMNS = {
         ("orbilu_link", "ORBiLu Link"),
         ("mixed_gender", "Mixed Gender Team"),
         ("mixed_team", "Mixed Team"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "Grants": [
@@ -84,6 +90,8 @@ EXPORT_COLUMNS = {
         ("roleComment", "Role Comment"),
         ("mixed_gender", "Mixed Gender Team"),
         ("mixed_team", "Mixed Team"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "Partnerships": [
@@ -95,6 +103,8 @@ EXPORT_COLUMNS = {
         ("role", "Role"),
         ("roleComment", "Role Comment"),
         ("acquired_funding", "Acquired Funding"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "PhD Students": [
@@ -104,6 +114,8 @@ EXPORT_COLUMNS = {
         ("graduation_year", "Graduation Year"),
         ("career_pursued", "Career Pursued"),
         ("current_work_location", "Current Work Location"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
 
@@ -113,6 +125,8 @@ EXPORT_COLUMNS = {
         ("award_title", "Award Title"),
         ("award_subject", "Award Subject"),
         ("award_issuer", "Issuing Organization"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "Press": [
@@ -122,11 +136,15 @@ EXPORT_COLUMNS = {
         ("press_type", "MediaType"),
         ("appearance_type", "Appearance Type"),
         ("subject", "Subject"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "Planned Contributions": [
         ("submission_id", "Submission ID"),
         ("planned_text", "Planned Contributions"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
     "Feedback": [
@@ -134,6 +152,8 @@ EXPORT_COLUMNS = {
         ("form_intuitive", "Form Intuitiveness"),
         ("form_easy", "Ease of Information Entry"),
         ("suggestions", "Suggestions"),
+        ("created_at", "Created At"),
+        ("updated_at", "Updated At"),
     ],
 
 }
@@ -195,15 +215,10 @@ def write_contributors_sheet(wb, db: Session, submission_id=None):
 
     autosize_columns(ws)
 
-@router.get("/")
-def export_submissions(auth = Depends(verify_credentials),  db: Session = Depends(get_db)):
-    if auth["auth_type"] == "submission_id":
-        submission_id = auth["submission_id"]
-        if not submission_id:
-            return None
-    if auth['auth_type'] == 'basic':
-        submission_id = None
-            
+@router.get("/", dependencies=[Depends(verify_admin)])
+def export_submissions(db: Session = Depends(get_db)):
+    submission_id = None
+
     wb = Workbook()
     wb.remove(wb.active)  # remove default empty sheet
 

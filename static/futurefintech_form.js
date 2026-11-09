@@ -1,5 +1,5 @@
 // const SURVEY_ID = 1;
-const API_BASE = "https://futurefintechfellowship.uni.lux";
+const API_BASE = "";
 const SUBMISSION_ENDPOINT =  API_BASE + '/api/submissions'
 const COUNTRIES = [
 	"Afghanistan",
@@ -295,6 +295,11 @@ const surveyJson = {
 
               <p>
                 To ensure fair and transparent assessment, only activities recorded in this form will be taken into account, and Fellows and Affiliated Researchers are responsible for the accuracy and completeness of the information provided.
+              </p>
+
+              <p style="margin-top: 20px; padding: 15px; background: #f0f7ff; border-left: 4px solid #049DD9; border-radius: 4px;">
+                <strong>Already submitted?</strong> You can resume your existing report using your Submission ID in the top menu.
+                <a href="#" onclick="recoverIdFromIntro()" style="color: #049DD9; text-decoration: underline; font-weight: bold; margin-left: 5px;">Forgot your Submission ID? Click here to recover it.</a>
               </p>
 
               <p>
@@ -1123,6 +1128,37 @@ async function apiRequest(url, method, data = null) {
   return response.json();
 }
 
+async function recoverIdFromIntro() {
+    const { value: email } = await Swal.fire({
+      title: "Your email address",
+      input: "email",
+      inputLabel: "Please enter your @uni.lu email address to recover your Submission ID:",
+      inputPlaceholder: "Enter your email address",
+      confirmButtonText: 'Check'
+    });
+    if (!email) return;
+
+    try {
+      const response = await fetch(`${API_BASE}/api/id-recovery/forgot-id?email=${encodeURIComponent(email)}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "An error occurred.");
+      }
+      const data = await response.json();
+      Swal.fire({
+        text: data.message,
+        icon: 'success',
+        confirmButtonText: 'Ok'
+      });
+    } catch (err) {
+      Swal.fire({
+        text: err.message,
+        icon: 'error',
+        confirmButtonText: 'Close'
+      });
+    }
+}
+
 function renderTopNav() {
   document.getElementById("startNewBtn").onclick = () => {
     window.location.href = window.location.origin + window.location.pathname;
@@ -1131,26 +1167,42 @@ function renderTopNav() {
   document.getElementById("resumeBtn").onclick = async () => {
     const id = document.getElementById("submissionIdInput").value.trim();
     if (!id) {
-      survey.notify("Provide an submission ID.", "error");
+      Swal.fire({
+        text: "Provide a submission ID.",
+        icon: 'error',
+        confirmButtonText: 'Close'
+      });
       return;
     }
     try {
       await loadSubmission(id, reload = false);
     } catch {
-      survey.notify("Invalid submission ID.", "error");
+      Swal.fire({
+        text: "Invalid submission ID.",
+        icon: 'error',
+        confirmButtonText: 'Close'
+      });
     }
   };
 
   document.getElementById("downloadBtn").onclick = async () => {
     const id = document.getElementById("submissionIdInput").value.trim();
     if (!id) {
-      survey.notify("Provide an submission ID.", "error");
+      Swal.fire({
+        text: "Provide a submission ID.",
+        icon: 'error',
+        confirmButtonText: 'Close'
+      });
       return;
     }
     try {
       await downloadSubmission(id);
     } catch {
-      survey.notify("Invalid submission ID.", "error");
+      Swal.fire({
+        text: "Invalid submission ID.",
+        icon: 'error',
+        confirmButtonText: 'Close'
+      });
     }
   };
 }
@@ -1168,7 +1220,11 @@ async function loadSubmission(submissionId, reload = true) {
     survey.notify("Your contribution has been successfully loaded and is now available for review. You can make changes and submit it when ready.", "success");
   } catch (err) {
     console.error("Failed to load submission", err);
-    survey.notify("Unable to load submission #" + submissionId, "error");
+    Swal.fire({
+      text: "Unable to load submission #" + submissionId,
+      icon: 'error',
+      confirmButtonText: 'Close'
+    });
     if (reload) {
       // Reload the page but remove any query parameters
       window.location.href = window.location.origin + window.location.pathname;
@@ -1206,7 +1262,11 @@ async function downloadSubmission(submissionId) {
     survey.notify("Download started.", "success");
   } catch (err) {
     console.error("Failed to download your submission data", err);
-    survey.notify("Failed to download your submission data #" + submissionId, "error");
+    Swal.fire({
+      text: "Failed to download your submission data #" + submissionId,
+      icon: 'error',
+      confirmButtonText: 'Close'
+    });
   }
 }
 
@@ -1240,7 +1300,11 @@ async function saveDraft(survey) {
     document.getElementById("submissionIdInput").value = submissionId;
 
   } catch (err) {
-    survey.notify("Unable to save draft. An error occured.", "error");
+    Swal.fire({
+      text: "Unable to save draft. An error occured.",
+      icon: 'error',
+      confirmButtonText: 'Close'
+    });
     console.error(err);
   }
 }
@@ -1265,7 +1329,15 @@ async function saveSubmission(sender) {
     }
 
   } catch (err) {
-    handleValidationErrors(err, sender);
+    if (err.status === 400) {
+      Swal.fire({
+        text: err.data?.detail || "This email has already been used for a submission.",
+        icon: 'error',
+        confirmButtonText: 'Close'
+      });
+    } else {
+      handleValidationErrors(err, sender);
+    }
   }
 }
 
@@ -1275,7 +1347,11 @@ async function saveSubmission(sender) {
 
 function handleValidationErrors(err, survey) {
   if (err.status !== 422 || !err.data?.detail) {
-    survey.notify("An unexpected error occurred while saving.", "error");
+    Swal.fire({
+      text: "An unexpected error occurred while saving.",
+      icon: 'error',
+      confirmButtonText: 'Close'
+    });
     console.error(err);
     return;
   }

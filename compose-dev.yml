@@ -1,0 +1,53 @@
+services:
+  caddy:
+    image: caddy:2.10.2
+    container_name: futurefintechsurvey_caddy
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - ./config/caddy:/etc/caddy/:ro
+      - ./data/caddy:/data
+      - ./static/:/static
+    environment:
+      LOG_FILE: "/data/access.log"
+      CADDY_DOMAIN: "http://futurefintechfellowship.uni.lux, http://192.168.137.27"
+      CADDY_PORT: "8080"
+      CORS_ORIGIN: "https://futurefintechfellowship.uni.lux, http://192.168.137.27"
+    networks:
+      - caddy
+    labels:
+      caddy: futurefintechfellowship.uni.lux
+      caddy.reverse_proxy: "{{ upstreams 8080 }}"
+      caddy.tls: /certs/futurefintechfellowship.uni.lux.crt /certs/futurefintechfellowship.uni.lux.key
+
+  api:
+    # image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.1
+    build:
+      context: .
+    container_name: futurefintechsurvey_api
+    volumes:
+      - ./data/db:/app/db
+    networks:
+      - caddy
+    environment:
+      BASIC_AUTH_USERNAME: "admin"
+      BASIC_AUTH_PASSWORD: ${BASIC_AUTH_PASSWORD}
+    command:
+      [
+        "uvicorn",
+        "main:app",
+        "--log-level",
+        "trace",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--proxy-headers",
+        "--forwarded-allow-ips",
+        "*",
+      ]
+
+networks:
+  caddy:
+    external: true

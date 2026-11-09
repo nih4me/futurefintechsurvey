@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy.orm import Session
 from database import get_db
 from schemas import SubmissionSurveySchema
+from auth import verify_admin
 from models import (
     Submission, ContributorInfo, Narrative, PlannedContribution, Feedback,
     Event, GrantProject, PartnershipProject,
@@ -37,11 +38,65 @@ def populate(db, submission_id, payload):
     return db
 
 # ----------------------------
+# ADMIN ENDPOINTS
+# ----------------------------
+
+@router.get("/", response_model=List[dict], dependencies=[Depends(verify_admin)])
+def list_submissions(db: Session = Depends(get_db)):
+    submissions = db.query(Submission).order_by(Submission.created_at.desc()).all()
+    contributors = db.query(ContributorInfo).all()
+
+    # Map contributors to submissions for a better list view
+    contributor_map = {c.submission_id: c.email for c in contributors}
+
+    return [
+        {
+            "submission_id": s.submission_id,
+            "email": contributor_map.get(s.submission_id, "Unknown"),
+            "status": s.status,
+            "created_at": s.created_at.isoformat() if s.created_at else None,
+            "updated_at": s.updated_at.isoformat() if s.updated_at else None
+        }
+        for s in submissions
+    ]
+
+@router.delete("/{submission_id}", dependencies=[Depends(verify_admin)])
+def delete_submission(submission_id: str, db: Session = Depends(get_db)):
+    submission = db.query(Submission).filter_by(submission_id=submission_id).first()
+    if not submission:
+        raise HTTPException(status_code=404, detail="Submission not found")
+
+    try:
+        # Manually delete related records
+        for table in [
+            Event, GrantProject, PartnershipProject,
+            Publication, PhDStudent, Award, PressAppearance,
+            ContributorInfo, Narrative, PlannedContribution, Feedback
+        ]:
+            db.query(table).filter_by(submission_id=submission_id).delete()
+
+        db.delete(submission)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return {"status": "deleted"}
+
+# ----------------------------
 # CREATE
 # ----------------------------
 
 @router.post("/", status_code=201)
 def create_submission(payload: SubmissionSurveySchema, status: str = "submitted", db: Session = Depends(get_db)):
+    # Check if email already exists
+    existing_contributor = db.query(ContributorInfo).filter_by(email=payload.contributor.email).first()
+    if existing_contributor:
+        raise HTTPException(
+            status_code=400,
+            detail="An account with this email already exists. Please use the 'Resume' feature with your submission ID to update your report."
+        )
+
     submission_id = generate_submission_id()
 
     try:
