@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .content { background-color: #ffffff; }
+        .highlight-box { background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; margin: 20px 0; font-family: monospace; font-size: 1.1em; }
+        .footer { margin-top: 30px; font-size: 0.9em; color: #666; border-top: 1px solid #eee; padding-top: 20px; }
+        .important { color: #d9534f; font-weight: bold; }
+        .link { color: #0056b3; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class='content'>
+        <p>Hello,</p>
+
+        <p>You recently requested to recover your Submission ID for the FutureFinTech Fellowship Survey.</p>
+
+        <p>Below, you will find your personal Submission ID and survey link:</p>
+
+        <div class='highlight-box'>
+            <strong>Submission ID:</strong> {{ submission_id }}<br>
+            <strong>Survey Link:</strong> <a href='{{ survey_link }}' class='link'>{{ survey_link }}</a>
+        </div>
+
+        <p>You can use this Submission ID and link to access your existing survey submission and resume completing your report at any time.</p>
+
+        <p>That means: If you have already participated in the last reporting period and submitted your contributions by 30 June 2026, you will be able to build on the information already provided and will only need to enter the new activities that have not yet been reported (i.e., for the second half of 2026).</p>
+
+        <p><strong>As a reminder:</strong> If you are accessing the survey from outside the University of Luxembourg network, please ensure that you are connected via VPN.</p>
+
+        <p>Please make sure to submit your report by the <span class='important'>end of the day on Monday, 4 January 2027, at the latest</span>.</p>
+
+        <p>Due to our reporting obligations, this deadline cannot be extended.</p>
+
+        <p>If you require further assistance, please do not reply to this automated email; instead, contact us at <a href='mailto:futurefintech@uni.lu' class='link'>futurefintech@uni.lu</a>.</p>
+
+        <p>Many thanks for your collaboration!</p>
+
+        <p>Best regards,<br>
+        <strong>FutureFinTech Team</strong></p>
+
+        <div class='footer'>
+            This is an automated message.
+        </div>
+    </div>
+</body>
+</html>
