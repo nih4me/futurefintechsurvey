@@ -22,7 +22,7 @@ services:
       caddy.tls: /certs/futurefintechfellowship.uni.lux.crt /certs/futurefintechfellowship.uni.lux.key
 
   api:
-    image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.2-prd-test
+    image: registry.gitlab.com/uniluxembourg/snt/tto/r2s/futurefintechsurvey:v0.1.3
     container_name: futurefintechsurvey_api
     volumes:
       - ./data/db:/app/db
