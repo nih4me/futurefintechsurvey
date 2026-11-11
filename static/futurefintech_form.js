@@ -253,7 +253,7 @@ const COUNTRIES = [
 	"Zimbabwe"
 ]
 
-const year = "2026";
+const year = new Date().getFullYear().toString();
 const only_checkbox_for_publications = true;
 const surveyJson = {
   "showProgressBar": "true",
@@ -303,7 +303,7 @@ const surveyJson = {
               </p>
 
               <p>
-                <strong>This forms should take approximately 15 minutes to answer if you have all the info collected.</strong>
+                <strong>This form should take approximately 15 minutes to answer if you have all the info collected.</strong>
               </p>
             </div>
           `
@@ -953,7 +953,7 @@ const surveyJson = {
         {
           "type": "comment",
           "name": "planned_contributions",
-          "title": "Outline your planned contributions to FutureFinTech for " + year + " (max 250 words).",
+          "title": "Outline the key contributions, initiatives, and activities you plan to undertake to support FutureFinTech’s objectives during the upcoming period (Maximum 250 words).",
           validators: [
             {
               type: "expression",
