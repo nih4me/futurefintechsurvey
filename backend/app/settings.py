@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     smtp_port: int = 25
     smtp_username: str | None = None
     smtp_password: str | None = None
-    smtp_from_email: str "ffintech-do-not-reply@uni.lu"
+    smtp_from_email: str = "ffintech-do-not-reply@uni.lu"
 
     class Config:
         env_file = ".env"
