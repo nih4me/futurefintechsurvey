@@ -10,6 +10,7 @@ from models import (
     Publication, PhDStudent, Award, PressAppearance
 )
 from utils import generate_submission_id
+from email_utils import send_confirmation_email
 
 router = APIRouter(prefix="/api/submissions", tags=["submissions"])
 
@@ -121,6 +122,9 @@ def create_submission(payload: SubmissionSurveySchema, status: str = "submitted"
 
         db.commit()
 
+        # Send confirmation email
+        send_confirmation_email(payload.contributor.email, submission_id)
+
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
@@ -205,6 +209,9 @@ def update_submission(
         db = populate(db, submission_id, payload)
 
         db.commit()
+
+        # Send confirmation email
+        send_confirmation_email(payload.contributor.email, submission_id)
 
     except Exception as e:
         db.rollback()
