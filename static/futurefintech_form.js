@@ -953,7 +953,7 @@ const surveyJson = {
         {
           "type": "comment",
           "name": "planned_contributions",
-          "title": "Outline the key contributions, initiatives, and activities you plan to undertake to support FutureFinTech’s objectives during the upcoming period (Maximum 250 words).",
+          "title": "Outline the key contributions, initiatives, and activities you plan to undertake to support FutureFinTech’s objectives during the next year (Maximum 250 words).",
           validators: [
             {
               type: "expression",
