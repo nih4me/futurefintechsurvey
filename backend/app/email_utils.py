@@ -71,8 +71,13 @@ def send_confirmation_email(to_email: str, submission_id: str, survey_link: str 
 
     try:
         with smtplib.SMTP(settings.smtp_server, settings.smtp_port) as server:
-            server.starttls()  # Secure the connection
-            server.login(settings.smtp_username, settings.smtp_password)
+            server.ehlo()
+            if server.has_extn("starttls"):
+                server.starttls()  # Secure the connection
+                server.ehlo()
+            # Only authenticate when credentials are configured
+            if settings.smtp_username and settings.smtp_password:
+                server.login(settings.smtp_username, settings.smtp_password)
             server.send_message(msg)
             print(f"send confirmation email to {to_email}******************")
     except Exception as e:
